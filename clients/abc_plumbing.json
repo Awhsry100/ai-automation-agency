@@ -1,0 +1,24 @@
+{
+  "client_id": "abc_plumbing",
+  "business_name": "ABC Plumbing",
+  "service_category": "plumbing",
+  "emergency_keywords": [
+    "flood",
+    "overflow",
+    "burst",
+    "sewage",
+    "backup",
+    "water everywhere",
+    "pipe burst",
+    "toilet overflowing"
+  ],
+  "lead_questions": [
+    "Your name",
+    "Service address",
+    "Best callback number",
+    "Is it actively leaking/overflowing right now?",
+    "What fixture is affected? (toilet/sink/tub/drain)",
+    "Any photos? (optional)"
+  ],
+  "alert_email_to": ""
+}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Turbo Desk — Admin</title>
+  <link rel="stylesheet" href="/static/style.css?v={{cache_bust}}">
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">T</div>
+        <div class="brandtext">
+          <div class="title">Turbo Desk</div>
+          <div class="subtitle">Admin — Leads</div>
+        </div>
+      </div>
+
+      <div class="clientbar">
+        <a class="btn" href="/">Back</a>
+        <button id="refreshAdminBtn" class="btn primary">Refresh</button>
+      </div>
+    </header>
+
+    <main class="grid" style="grid-template-columns:1fr;">
+      <section class="card">
+        <div class="cardhead">
+          <div>
+            <div class="cardtitle">Recent Leads</div>
+            <div class="muted">Latest 200</div>
+          </div>
+        </div>
+
+        <div id="leadsList" class="list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/script.js?v={{cache_bust}}"></script>
+</body>
+</html>

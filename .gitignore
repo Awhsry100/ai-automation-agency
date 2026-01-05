@@ -1,0 +1,19 @@
+# Python / virtual environment
+venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+
+# Local data (leads, logs)
+data/*.json
+
+# Editor / OS noise
+.vscode/
+.DS_Store
+Thumbs.db
+.env
+service-account*.json
+*.pem
+*.key

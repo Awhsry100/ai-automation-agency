@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Turbo Desk — Client Onboarding</title>
+  <link rel="stylesheet" href="/static/style.css?v={{cache_bust}}">
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">T</div>
+        <div class="brandtext">
+          <div class="title">Turbo Desk</div>
+          <div class="subtitle">Client Onboarding</div>
+        </div>
+      </div>
+      <div class="clientbar">
+        <a class="btn" href="/">Back</a>
+      </div>
+    </header>
+
+    <main class="grid" style="grid-template-columns:1fr;max-width:760px;">
+      <section class="card">
+        <div class="cardhead">
+          <div>
+            <div class="cardtitle">New Client</div>
+            <div class="muted">Creates a client config instantly</div>
+          </div>
+        </div>
+
+        <form method="post" action="/onboard" class="syslist" style="gap:12px;">
+          <label class="sysrow" style="flex-direction:column;align-items:stretch;">
+            <div class="syslabel">Business name</div>
+            <input class="input" name="business_name" required placeholder="ABC Electric" />
+          </label>
+
+          <label class="sysrow" style="flex-direction:column;align-items:stretch;">
+            <div class="syslabel">Client ID (short, no spaces)</div>
+            <input class="input" name="client_id" required placeholder="abc_electric" />
+            <div class="muted">Use lowercase letters, numbers, underscores.</div>
+          </label>
+
+          <label class="sysrow" style="flex-direction:column;align-items:stretch;">
+            <div class="syslabel">Alert email (urgent leads)</div>
+            <input class="input" name="alert_email_to" required placeholder="owner@abcelectric.com" />
+          </label>
+
+          <label class="sysrow" style="flex-direction:column;align-items:stretch;">
+            <div class="syslabel">Service type</div>
+            <select class="input" name="service_category">
+              <option value="electrical">Electrical</option>
+              <option value="plumbing">Plumbing</option>
+              <option value="hvac">HVAC</option>
+              <option value="general">General</option>
+            </select>
+          </label>
+
+          <button class="btn primary" type="submit">Create Client</button>
+
+          {% if created %}
+            <div class="item">
+              <div class="itemTitle">Client created ✅</div>
+              <div class="itemSub">Send this link to test their routing:</div>
+              <div class="itemBody">{{ created_link }}</div>
+            </div>
+          {% endif %}
+
+          {% if error %}
+            <div class="item">
+              <div class="itemTitle">Error</div>
+              <div class="itemBody">{{ error }}</div>
+            </div>
+          {% endif %}
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
