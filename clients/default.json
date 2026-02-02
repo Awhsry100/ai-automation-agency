@@ -1,25 +1,9 @@
 {
   "client_id": "default",
   "business_name": "Turbo Desk",
-  "service_category": "home_services",
-  "emergency_keywords": [
-    "sparking",
-    "smoke",
-    "fire",
-    "gas",
-    "flood",
-    "overflow",
-    "burst",
-    "no power",
-    "burning smell",
-    "carbon monoxide"
-  ],
-  "lead_questions": [
-    "Your name",
-    "Service address",
-    "Best callback number",
-    "Is it actively happening right now?",
-    "Any photos/video? (optional)"
-  ],
-  "alert_email_to": ""
+  "service_category": "general",
+  "techs": [
+    { "id": "tech_1", "name": "Turbo Tech 1" },
+    { "id": "tech_2", "name": "Turbo Tech 2" }
+  ]
 }

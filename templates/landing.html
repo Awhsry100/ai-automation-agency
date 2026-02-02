@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Turbo Dispatch — Select Company</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">TD</div>
+      <div>
+        <div class="title">Turbo Dispatch</div>
+        <div class="subtitle">Choose a client</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1100px;margin:18px auto;padding:0 14px 22px;">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Companies</div>
+          <div class="panel-subtitle">Click to open the customer intake chat.</div>
+        </div>
+      </div>
+
+      <div style="padding:14px;">
+        <div class="company-grid">
+          {% for c in clients %}
+            <a class="company-card" href="{{ url_for('client_chat', client_id=c.client_id) }}">
+              <div>
+                <div class="company-name">{{ c.business_name or c.client_id }}</div>
+                <div class="company-desc">Client ID: <span class="mono">{{ c.client_id }}</span></div>
+              </div>
+              <div class="company-card-bottom">
+                <div class="company-path mono">/c/{{ c.client_id }}</div>
+                <span class="pill pill-muted">Open</span>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

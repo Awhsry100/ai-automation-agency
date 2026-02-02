@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#0b1220; color:#e8eefc; }
+    .card { max-width:420px; margin:70px auto; background:#121b2e; border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:22px; }
+    label { display:block; margin:10px 0 6px; opacity:.9; }
+    input { width:100%; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:#0e1628; color:#e8eefc; }
+    button { margin-top:14px; width:100%; padding:12px; border-radius:12px; border:0; background:#4f8cff; color:white; font-weight:700; cursor:pointer; }
+    .muted { opacity:.75; font-size:13px; margin-top:12px; }
+    .err { margin-top:12px; background:rgba(255,80,80,.12); border:1px solid rgba(255,80,80,.35); padding:10px; border-radius:10px; }
+    a { color:#9fc4ff; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2 style="margin:0 0 6px;">{{ client.business_name or client.client_id }} — Login</h2>
+    <div class="muted">Use your dispatcher/owner account. (This is separate from Google Calendar.)</div>
+
+    {% if error %}
+      <div class="err">{{ error }}</div>
+    {% endif %}
+
+    {% if not has_users %}
+      <div class="err">
+        No app users exist yet for this client.<br/>
+        Use <a href="{{ url_for('admin_login', client_id=client.client_id) }}">Admin Password Login</a> to get in,
+        then create your first owner user via the bootstrap endpoint.
+      </div>
+    {% endif %}
+
+    <form method="post">
+      <input type="hidden" name="next" value="{{ next }}" />
+      <label>Email</label>
+      <input name="email" type="email" autocomplete="username" required />
+      <label>Password</label>
+      <input name="password" type="password" autocomplete="current-password" required />
+      <button type="submit">Sign in</button>
+    </form>
+
+    <div class="muted">
+      Prefer the old login? <a href="{{ url_for('admin_login', client_id=client.client_id) }}">Admin password login</a>
+    </div>
+  </div>
+</body>
+</html>

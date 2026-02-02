@@ -1,19 +1,36 @@
+@"
+# =========================
 # Python / virtual environment
+# =========================
 venv/
 __pycache__/
 *.pyc
 
-# Secrets
+# =========================
+# Secrets / credentials
+# =========================
 .env
-
-# Local data (leads, logs)
-data/*.json
-
-# Editor / OS noise
-.vscode/
-.DS_Store
-Thumbs.db
-.env
+.env.*
 service-account*.json
 *.pem
 *.key
+
+# =========================
+# App data (customers, tickets, logs)
+# =========================
+data/**/*.json
+data/**/google/token.json
+audit.log
+*.log
+
+# =========================
+# Editor / OS noise
+# =========================
+.vscode/
+.DS_Store
+Thumbs.db
+"@ | Set-Content -Encoding UTF8 .gitignore
+
+# Ignore runtime data directory
+data/
+

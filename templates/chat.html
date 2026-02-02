@@ -1,0 +1,136 @@
+<!-- templates/chat.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{{ client.business_name or client.client_id }} — Turbo Dispatch</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+
+  <script>
+    window.TURBO_CLIENT_ID = "{{ client.client_id }}";
+  </script>
+</head>
+
+<body class="page-chat">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">TD</div>
+      <div>
+        <div class="title">{{ client.business_name or "Turbo Desk" }}</div>
+        <div class="subtitle">Customer intake chat</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <a class="btn btn-ghost" href="{{ url_for('select_company') }}">← Back</a>
+      <a class="btn btn-ghost" href="{{ url_for('pricing', client_id=client.client_id) }}">Pricing</a>
+
+      <!-- IMPORTANT:
+           This goes to dispatcher. If not logged in, your login_required will redirect to admin_login
+           with next=/dispatcher automatically. -->
+      <a class="btn btn-primary" href="{{ url_for('dispatcher', client_id=client.client_id) }}">Dispatcher</a>
+    </div>
+  </div>
+
+  <!-- 2-column shell (chat left, ticket right) -->
+  <main class="shell shell-fill chat-layout">
+    <!-- LEFT: Chat -->
+    <section class="panel chat-panel chat-fill">
+      <header class="panel-head">
+        <div>
+          <div class="panel-title">Turbo Dispatch</div>
+          <div class="panel-subtitle" id="chatState">Loading…</div>
+        </div>
+        <button class="btn btn-ghost" id="newChatBtn" type="button">New chat</button>
+      </header>
+
+      <div class="chat-wrap">
+        <div class="new-msg-pill" id="newMsgPill" role="button" tabindex="0" aria-label="Scroll to new messages">
+          New messages ↓
+        </div>
+
+        <div class="chat-scroll" id="chat">
+          <div class="chat-inner" id="chatInner">
+            <!-- Initial bot message -->
+            <div class="msg bot">
+              <div class="avatar">TD</div>
+              <div class="bubble">
+                <div class="bubble-title">Hey — I’m Turbo Dispatch.</div>
+                <div class="bubble-text">What’s going on today? (Example: “outlet sparking” or “toilet overflowing”)</div>
+                <div class="msg-time">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- IMPORTANT: ids must match static/chat.js -->
+        <form class="chat-input" id="chatForm" autocomplete="off">
+          <input class="input" id="msgInput" type="text" placeholder="Type your message..." />
+          <button class="btn btn-primary" id="sendBtn" type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- RIGHT: Ticket summary -->
+    <aside class="panel ticket-panel ticket-fill">
+      <header class="panel-head">
+        <div>
+          <div class="panel-title">Ticket</div>
+          <div class="panel-subtitle">Live summary</div>
+        </div>
+        <span class="pill pill-muted" id="ticketStatusPill">open</span>
+      </header>
+
+      <div class="ticket-body">
+        <div class="kv">
+          <div class="row">
+            <div class="k">Ticket ID</div>
+            <div class="v" id="ticketId">—</div>
+          </div>
+          <div class="row">
+            <div class="k">Service</div>
+            <div class="v" id="ticketService">—</div>
+          </div>
+          <div class="row">
+            <div class="k">Urgency</div>
+            <div class="v" id="ticketUrgency">—</div>
+          </div>
+          <div class="row">
+            <div class="k">Status</div>
+            <div class="v" id="ticketStatus">—</div>
+          </div>
+          <div class="row">
+            <div class="k">Address</div>
+            <div class="v" id="ticketAddress">—</div>
+          </div>
+          <div class="row">
+            <div class="k">Availability</div>
+            <div class="v" id="ticketAvailability">—</div>
+          </div>
+          <div class="row">
+            <div class="k">Phone</div>
+            <div class="v" id="ticketPhone">—</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="ticket-timeline-head">
+          <div class="panel-title">Timeline</div>
+          <div class="panel-subtitle">Updates as the ticket progresses</div>
+        </div>
+
+        <div class="timeline timeline-fill" id="timeline">
+          <!-- filled by chat.js -->
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Use your REAL feature chat client -->
+  <script src="{{ url_for('static', filename='chat.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Audit Log — {{ settings.brand_name }}</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">{{ settings.logo_text }}</div>
+      <div>
+        <div class="title">Audit Log</div>
+        <div class="subtitle">Last 500 events</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a class="btn ghost" href="/dispatcher">Back</a>
+      <form method="POST" action="/admin/logout" style="display:inline;">
+        <button class="btn danger" type="submit">Logout</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="shell" style="grid-template-columns:1fr;">
+    <section class="panel" style="max-width: 1100px; margin:0 auto;">
+      <div class="panel-head">
+        <div class="panel-title">Events</div>
+        <div class="pill subtle">{{ entries|length }} loaded</div>
+      </div>
+
+      <div style="padding:18px;">
+        {% if not entries %}
+          <div class="muted">No audit entries yet.</div>
+        {% else %}
+          <div class="timeline">
+            {% for e in entries %}
+              <div class="tl-item">
+                <div class="tl-title">{{ e.event }}</div>
+                <div class="tl-meta">{{ e.by }} • {{ e.at }}</div>
+                {% if e.meta %}
+                  <div class="muted mono" style="margin-top:8px; white-space:pre-wrap;">{{ e.meta | tojson }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  </main>
+</body>
+</html>

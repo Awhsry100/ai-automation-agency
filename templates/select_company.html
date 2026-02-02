@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Turbo Desk — Select a company</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <body class="page-select">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">TD</div>
+      <div>
+        <div class="title">Turbo Desk</div>
+        <div class="subtitle">Select a company</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="pill pill-muted">Multi-tenant</span>
+    </div>
+  </div>
+
+  <div style="max-width:1100px;margin:18px auto;padding:0 14px;">
+    <div class="panel" style="min-height:auto;">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Select a company</div>
+          <div class="panel-subtitle">Choose which business you want to open.</div>
+        </div>
+        <span class="pill pill-muted">{{ clients|length }} available</span>
+      </div>
+
+      <div style="padding:14px;">
+        <div class="company-grid">
+          {% for c in clients %}
+          <a class="company-card" href="{{ url_for('client_chat', client_id=c.client_id) }}">
+            <div class="company-card-top">
+              <div>
+                <div class="company-name">{{ c.business_name or c.client_id }}</div>
+                <div class="company-desc">Open chat intake + pricing + dispatcher access for this client.</div>
+              </div>
+              <span class="pill pill-muted">{{ c.service_category or "service" }}</span>
+            </div>
+            <div class="company-card-bottom">
+              <span class="company-path">/c/{{ c.client_id }}</span>
+              <span class="btn btn-primary">Open →</span>
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

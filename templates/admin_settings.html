@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Settings — {{ settings.brand_name }}</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">{{ settings.logo_text }}</div>
+      <div>
+        <div class="title">Settings</div>
+        <div class="subtitle">White-label • Business hours • Demo mode</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a class="btn ghost" href="/dispatcher">Back to Dispatcher</a>
+      <form method="POST" action="/admin/logout" style="display:inline;">
+        <button class="btn danger" type="submit">Logout</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="shell" style="grid-template-columns:1fr;">
+    <section class="panel" style="max-width: 920px; margin:0 auto;">
+      <div class="panel-head">
+        <div class="panel-title">Configuration</div>
+        {% if saved %}
+          <div class="pill good">Saved</div>
+        {% elif error %}
+          <div class="pill warn">{{ error }}</div>
+        {% else %}
+          <div class="pill subtle">Edit safely</div>
+        {% endif %}
+      </div>
+
+      <form method="POST" action="/admin/settings" style="padding:18px;">
+        <div class="filters" style="grid-template-columns: 1fr 1fr; border-bottom:none; padding:0; margin-bottom:14px;">
+          <div>
+            <label class="muted">Brand name</label>
+            <input class="input-dark" name="brand_name" value="{{ settings.brand_name }}" style="width:100%;" />
+          </div>
+          <div>
+            <label class="muted">Tagline</label>
+            <input class="input-dark" name="brand_tagline" value="{{ settings.brand_tagline }}" style="width:100%;" />
+          </div>
+          <div>
+            <label class="muted">Logo text (2–4 chars)</label>
+            <input class="input-dark" name="logo_text" value="{{ settings.logo_text }}" style="width:100%;" />
+          </div>
+          <div>
+            <label class="muted">Accent color (hex)</label>
+            <input class="input-dark" name="accent_color" value="{{ settings.accent_color }}" style="width:100%;" />
+          </div>
+        </div>
+
+        <div>
+          <label class="muted">Trust line (shown in chat header)</label>
+          <input class="input-dark" name="trust_line" value="{{ settings.trust_line }}" style="width:100%;" />
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="panel-title" style="font-size:16px; margin-bottom:10px;">Business Hours (After-hours detection)</div>
+
+        <div class="filters" style="grid-template-columns: 1fr 1fr 1fr; border-bottom:none; padding:0; margin-bottom:14px;">
+          <div>
+            <label class="muted">Start hour (0–23)</label>
+            <input class="input-dark" name="start_hour" value="{{ settings.business_hours.start_hour }}" style="width:100%;" />
+          </div>
+          <div>
+            <label class="muted">End hour (1–24)</label>
+            <input class="input-dark" name="end_hour" value="{{ settings.business_hours.end_hour }}" style="width:100%;" />
+          </div>
+          <div style="display:flex; align-items:flex-end;">
+            <label class="muted" style="display:flex; align-items:center; gap:10px;">
+              <input type="checkbox" name="weekends_after_hours" {% if settings.business_hours.weekends_after_hours %}checked{% endif %} />
+              Treat weekends as after-hours
+            </label>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="panel-title" style="font-size:16px; margin-bottom:10px;">Demo Mode</div>
+
+        <label class="muted" style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" name="demo_mode" {% if settings.demo_mode %}checked{% endif %} />
+          Enable demo mode (disables status updates + deletes)
+        </label>
+
+        <div style="height:16px;"></div>
+        <button class="btn primary" type="submit">Save Settings</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,185 +1,1246 @@
+/* =========================================================
+   Turbo Dispatch — static/style.css (FULL)
+   ✅ Consolidated / de-duped so nothing fights itself
+   ✅ Keeps ALL current features you pasted:
+      - Topbar + brand
+      - Buttons / inputs / dark selects
+      - Panels + pills/chips
+      - Chat + ticket 2-column layout
+      - Bot left / User right + avatar on right
+      - Safety/urgent/warning badges + bubble rims
+      - Toasts
+      - Dispatcher layout + cards + details panel
+      - Company select grid
+      - Pricing page (plans + FAQ)
+      - Timeline detail styling
+      - Full-height chat (no dead space)
+      - New messages pill NEVER becomes a blue overlay
+   ========================================================= */
+
+/* =========================
+   Theme / base
+========================= */
 :root{
-  --bg:#f5f7fb;
-  --card:#ffffff;
-  --text:#0b1220;
-  --muted:#5b6476;
-  --line:#e6eaf2;
-  --shadow: 0 10px 30px rgba(15, 23, 42, .08);
-  --radius: 18px;
-  --primary:#0b1220;
-  --primaryText:#ffffff;
+  --bg: #0b0e14;
+
+  --panel: rgba(255,255,255,0.06);
+  --panel2: rgba(255,255,255,0.045);
+
+  --border: rgba(255,255,255,0.10);
+  --border2: rgba(255,255,255,0.14);
+
+  --text: #e9eef7;
+  --muted: rgba(233,238,247,0.72);
+  --muted2: rgba(233,238,247,0.55);
+
+  --blue: #4f8cff;
+  --blue2: rgba(79,140,255,0.18);
+
+  --danger: #ff5b5b;
+  --warn: #ffca63;
+
+  --shadow: 0 20px 60px rgba(0,0,0,0.55);
+
+  --r: 18px;
+  --r2: 14px;
+
+  /* Force native controls (select popups) to dark */
+  color-scheme: dark;
 }
 
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{
+  height:100%;
+  color-scheme: dark;
+}
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  background:var(--bg);
-  color:var(--text);
+  background: var(--bg);
+  color: var(--text);
 }
+a{color:inherit}
+.hidden{display:none !important}
+.muted{color:var(--muted)}
+.mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
 
-.wrap{max-width:1100px;margin:28px auto;padding:0 18px}
-
+/* =========================
+   Topbar (supports templates)
+========================= */
 .topbar{
+  position: sticky;
+  top: 0;
+  z-index: 50;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:14px;
-  padding:18px 20px;
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(8,11,16,0.92);
+  backdrop-filter: blur(10px);
 }
-
-.brand{display:flex;gap:12px;align-items:center}
+.topbar-left, .topbar-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+/* new dispatcher uses .brand-dot; chat/pricing uses .logo */
+.brand-dot,
 .logo{
-  width:42px;height:42px;border-radius:14px;
+  width:36px;height:36px;border-radius:12px;
   display:grid;place-items:center;
-  background:var(--primary);color:var(--primaryText);
-  font-weight:800;
+  font-weight:900;
+  letter-spacing:0.5px;
+  background: rgba(79,140,255,0.22);
+  border: 1px solid rgba(255,255,255,0.16);
 }
-.title{font-size:18px;font-weight:800;line-height:1}
-.subtitle{font-size:13px;color:var(--muted);margin-top:4px}
+.brand-text{display:flex;flex-direction:column}
+.brand-title{font-weight:900;line-height:1}
+.brand-subtitle{font-size:12px;color:var(--muted);margin-top:3px}
 
-.clientbar{display:flex;gap:10px;align-items:center}
-.grid{
-  margin-top:18px;
+/* Pricing/company templates use .title/.subtitle */
+.title{font-weight:900;line-height:1}
+.subtitle{font-size:12px;color:var(--muted);margin-top:3px}
+
+.top-actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+/* =========================
+   Buttons / Inputs
+========================= */
+.btn{
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 12px;
+  cursor:pointer;
+  font-weight: 750;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  user-select:none;
+  white-space: nowrap;
+}
+.btn:hover{border-color: var(--border2); background: rgba(255,255,255,0.06)}
+.btn:disabled{opacity:.55; cursor:not-allowed}
+.btn-ghost{background: transparent;}
+.btn-primary{
+  border-color: rgba(79,140,255,0.55);
+  background: rgba(79,140,255,0.22);
+}
+.btn-primary:hover{
+  border-color: rgba(79,140,255,0.8);
+  background: rgba(79,140,255,0.28);
+}
+.btn.disabled{opacity:.55;pointer-events:none}
+
+.input{
+  padding: 11px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(79,140,255,0.35);
+  outline:none;
+  background: rgba(0,0,0,0.25);
+  color: var(--text);
+}
+.input:focus{
+  border-color: rgba(79,140,255,0.75);
+  box-shadow: 0 0 0 4px rgba(79,140,255,0.12);
+}
+
+/* Keep native appearance; enforce dark scheme */
+.select{appearance:auto; color-scheme: dark;}
+select,
+select.input,
+.input.select,
+select.select{
+  color-scheme: dark;
+}
+select option,
+select optgroup{
+  background-color: #0b0e14 !important;
+  color: #e9eef7 !important;
+}
+
+.textarea{
+  width:100%;
+  min-height: 120px;
+  padding: 11px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  outline:none;
+  background: rgba(0,0,0,0.25);
+  color: var(--text);
+  resize: vertical;
+}
+
+/* =========================
+   Pills / Chips
+========================= */
+.pill{
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text);
+  white-space:nowrap;
+}
+.pill-muted{opacity:.85}
+.pill-warn{border-color: rgba(255,202,99,0.55)}
+.pill-danger{border-color: rgba(255,91,91,0.55)}
+.urgent{border-color: rgba(255,91,91,0.55)}
+
+.chip{
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text);
+}
+.chip-muted{opacity:.85}
+
+/* =========================
+   Global panels
+========================= */
+.panel{
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.panel-head{
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.panel-title{font-weight:950;font-size:14px;letter-spacing:.2px}
+.panel-subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* =========================================================
+   CHAT + TICKET PAGE
+   (scoped to .page-chat so it won't touch dispatcher)
+========================================================= */
+
+/* 2-column shell */
+.page-chat .shell{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 14px 22px;
   display:grid;
-  grid-template-columns: 1.4fr .9fr;
-  gap:18px;
+  grid-template-columns: 1.35fr 0.85fr;
+  gap: 14px;
+}
+.page-chat .shell-fill{
+  min-height: calc(100vh - 64px);
+  align-content: start;
+}
+.page-chat .chat-fill,
+.page-chat .ticket-fill{
+  display:flex;
+  flex-direction: column;
+  min-height: calc(100vh - 64px - 32px);
+}
+.page-chat .chat-panel{
+  display:flex;
+  flex-direction:column;
+  min-height:100%;
+  height:100%;
+}
+.page-chat .chat-wrap{
+  position: relative;
+  padding: 14px;
+  display:flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1 1 auto;
+  min-height: 0;
+  justify-content: flex-start;
 }
 
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:18px;
+/* Scroll container */
+.page-chat .chat-scroll,
+.page-chat .chat{
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 4px 2px 6px;
+  scrollbar-gutter: stable both-edges;
+  overscroll-behavior: contain;
 }
 
-.cardhead{
+/* Inner message stack */
+.page-chat .chat-inner,
+.page-chat #chatInner{
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 6px 2px 12px;
+  width: 100%;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+/* Composer pinned */
+.page-chat .composer-sticky,
+.page-chat .chat-input{
+  position: sticky;
+  bottom: 0;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+  padding: 12px 0;
+  background: rgba(8,11,16,0.92);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.page-chat .chat-input .input{
+  flex: 1 1 auto;
+}
+
+/* Ticket */
+.page-chat .ticket-body{
+  display:flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.page-chat .kv{
+  padding: 14px 16px 10px;
+  display:flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.page-chat .kv .row{
+  display:grid;
+  grid-template-columns: 110px 1fr;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.page-chat .kv .k{
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 850;
+}
+.page-chat .kv .v{
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(233,238,247,0.92);
+}
+.page-chat .divider{height:1px;background: rgba(255,255,255,0.08);}
+.page-chat .ticket-timeline-head{ padding: 12px 16px 8px; }
+.page-chat .timeline{
+  padding: 10px 16px 16px;
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.page-chat .timeline-fill{
+  flex: 1;
+  min-height: 0;
+  overflow:auto;
+  overscroll-behavior: contain;
+}
+.page-chat .event{
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.18);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+/* =========================================================
+   CHAT MESSAGE ALIGNMENT (single source of truth)
+   - Bot LEFT, User RIGHT
+   - User avatar on RIGHT
+========================================================= */
+.page-chat .msg{
+  display:flex;
+  align-items:flex-end;
+  gap: 10px;
+  width: 100%;
+}
+.page-chat .msg.bot{ justify-content:flex-start; }
+.page-chat .msg.user{ justify-content:flex-end; }
+
+/* Avatars */
+.page-chat .avatar{
+  width:30px;height:30px;
+  border-radius: 12px;
+  display:grid;place-items:center;
+  font-weight: 950;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.05);
+  flex: 0 0 auto;
+}
+
+/* Bubbles */
+.page-chat .bubble{
+  max-width: min(72%, 680px);
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.20);
+  border-radius: 16px;
+  padding: 10px 12px;
+}
+
+/* User bubble pinned right */
+.page-chat .msg.user .bubble{
+  margin-left: auto;
+  background: rgba(79,140,255,0.14);
+  border-color: rgba(79,140,255,0.28);
+  order: 1;
+}
+/* User avatar after bubble (right side) */
+.page-chat .msg.user .avatar{
+  order: 2;
+  margin-left: 8px;
+  margin-right: 0;
+}
+/* Bot spacing */
+.page-chat .msg.bot .bubble{ margin-left: 6px; }
+.page-chat .msg.bot .avatar{ margin-right: 6px; }
+
+.bubble-title{ font-weight: 950; margin-bottom: 4px; }
+.bubble-text{
+  color: rgba(233,238,247,0.92);
+  line-height: 1.35;
+  font-size: 13px;
+}
+.msg-time{
+  margin-top: 7px;
+  font-size: 11px;
+  color: var(--muted2);
+}
+.page-chat .msg.user .msg-time{ text-align:right; }
+
+/* =========================================================
+   SAFETY / URGENCY BADGES (KEEP)
+========================================================= */
+.bubble-badge-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-bottom: 6px;
+}
+.bubble-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .2px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+}
+.bubble-badge .icon{ font-size: 13px; line-height: 1; }
+
+/* Danger */
+.bubble.danger{
+  border-color: rgba(255,91,91,0.62) !important;
+  background: rgba(255,91,91,0.11) !important;
+  box-shadow: 0 0 0 1px rgba(255,91,91,0.08), 0 18px 50px rgba(0,0,0,0.35);
+}
+.bubble-badge.danger{
+  border-color: rgba(255,91,91,0.65);
+  background: rgba(255,91,91,0.14);
+}
+
+/* Warning */
+.bubble.warning{
+  border-color: rgba(255,202,99,0.55) !important;
+  background: rgba(255,202,99,0.10) !important;
+  box-shadow: 0 0 0 1px rgba(255,202,99,0.08), 0 18px 50px rgba(0,0,0,0.35);
+}
+.bubble-badge.warning{
+  border-color: rgba(255,202,99,0.60);
+  background: rgba(255,202,99,0.12);
+}
+
+/* Urgent */
+.bubble.urgent{
+  border-color: rgba(79,140,255,0.62) !important;
+  background: rgba(79,140,255,0.10) !important;
+  box-shadow: 0 0 0 1px rgba(79,140,255,0.10), 0 18px 50px rgba(0,0,0,0.35);
+}
+.bubble-badge.urgent{
+  border-color: rgba(79,140,255,0.60);
+  background: rgba(79,140,255,0.18);
+}
+
+.bubble.danger .bubble-text,
+.bubble.warning .bubble-text,
+.bubble.urgent .bubble-text{
+  color: rgba(233,238,247,0.96);
+}
+
+/* =========================================================
+   New message pill (NEVER a blue overlay)
+========================================================= */
+.page-chat .new-msg-pill,
+#newMsgPill{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:10px;
+  z-index:50;
+
+  display:none; /* JS toggles to inline-flex */
+  align-items:center;
+  gap:8px;
+
+  width:auto;
+  height:auto;
+  padding:8px 12px;
+  border-radius:999px;
+
+  border:1px solid rgba(59,130,246,0.35);
+  background: rgba(30,58,138,0.35);
+  cursor:pointer;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* =========================================================
+   Toasts (used by chat.js)
+========================================================= */
+.toast-wrap{
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  z-index: 9999;
+}
+.toast{
+  width: min(360px, calc(100vw - 32px));
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(8,11,16,0.92);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+  padding: 12px;
+  display:flex;
+  gap: 10px;
+  animation: toastIn .18s ease both;
+}
+.toast .t-ico{ width: 26px; display:flex; align-items:flex-start; justify-content:center; }
+.toast .t-title{ font-weight: 950; }
+.toast .t-desc{ margin-top: 3px; color: rgba(233,238,247,0.72); font-size: 12px; line-height: 1.3; }
+.toast.ok{ border-color: rgba(34,197,94,0.25); }
+.toast.warn{ border-color: rgba(245,158,11,0.25); }
+.toast.err{ border-color: rgba(239,68,68,0.25); }
+
+@keyframes toastIn{ from{ transform: translateY(8px); opacity:0; } to{ transform: translateY(0); opacity:1; } }
+@keyframes toastOut{ to{ transform: translateY(8px); opacity:0; } }
+
+/* =========================================================
+   Dispatcher page
+========================================================= */
+.app-shell{min-height:100vh}
+
+.dispatcher-layout{
+  display:grid;
+  grid-template-columns: 1.25fr 0.95fr;
+  gap: 14px;
+  padding: 14px;
+}
+
+.panel-left,
+.panel-right{
+  display:flex;
+  flex-direction: column;
+  min-height: calc(100vh - 86px);
+}
+
+.search-wrap{min-width: 240px}
+
+.metrics{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.metric-card{
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.18);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+.metric-label{font-size:12px;color:var(--muted);font-weight:800}
+.metric-value{font-size:18px;font-weight:950;margin-top:6px}
+
+.list-wrap{
+  padding: 0;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+}
+.ticket-list{
+  padding: 12px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  overflow:auto;
+  min-height:0;
+}
+
+.ticket-card{
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.18);
+  border-radius: 14px;
+  padding: 12px;
+  cursor:pointer;
+}
+.ticket-card:hover{
+  border-color: rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.22);
+}
+.ticket-card.active{
+  border-color: rgba(79,140,255,0.65);
+  background: rgba(79,140,255,0.12);
+}
+
+.ticket-top{
+  display:flex;
+  justify-content:space-between;
+  gap: 12px;
+  align-items:flex-start;
+}
+.ticket-title{ font-weight:950; font-size:13px; }
+
+.badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  justify-content:flex-end;
+}
+
+.ticket-sub{
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.empty-state{ padding: 18px 14px; color: var(--muted); }
+.empty-state-error .empty-title{ color: var(--danger); font-weight: 950; }
+.empty-title{font-weight:950;color:var(--text)}
+.empty-desc{margin-top:6px;color:var(--muted)}
+
+.details-panel{
+  padding: 14px;
+  overflow:auto;
+  flex:1;
+  min-height:0;
+}
+
+.details-head{
   display:flex;
   align-items:flex-start;
   justify-content:space-between;
-  gap:12px;
-  margin-bottom:14px;
+  gap: 12px;
+}
+.details-title{font-weight:950;font-size:14px}
+.details-subtitle{font-size:12px;color:var(--muted);margin-top:4px}
+
+.details-grid{
+  margin-top: 14px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.details-item{
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.16);
+  border-radius: 14px;
+  padding: 12px;
+}
+.details-item-wide{grid-column: span 2}
+
+.details-label{
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 850;
+}
+.details-value{
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(233,238,247,0.92);
 }
 
-.cardtitle{font-size:16px;font-weight:800}
-.muted{color:var(--muted);font-size:13px}
-
-.pill{
-  font-size:12px;
-  padding:7px 10px;
-  border-radius:999px;
-  border:1px solid var(--line);
-  color:var(--muted);
-  background:#fbfcff;
-}
-
-.input{
-  border:1px solid var(--line);
-  background:#fbfcff;
-  border-radius:12px;
-  padding:12px 12px;
-  font-size:14px;
-  outline:none;
-}
-.input:focus{border-color:#c9d2e6}
-
-.btn{
-  border:1px solid var(--line);
-  background:#ffffff;
-  color:var(--text);
-  padding:11px 14px;
-  border-radius:12px;
-  font-weight:700;
-  cursor:pointer;
-}
-.btn:hover{filter:brightness(.98)}
-.btn.primary{
-  background:var(--primary);
-  border-color:var(--primary);
-  color:var(--primaryText);
-}
-
-.grow{flex:1}
-
-.chatbox{
-  height:360px;
-  overflow:auto;
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:14px;
-  background:#fbfcff;
-}
-
-.msg{
+.assign-row{
   display:flex;
-  margin:10px 0;
+  gap: 8px;
+  align-items:center;
+  flex-wrap:wrap;
 }
-.msg .bubble{
-  max-width:78%;
-  padding:12px 12px;
-  border-radius:16px;
-  border:1px solid var(--line);
-  background:#fff;
-  white-space:pre-wrap;
-  line-height:1.25;
-  font-size:14px;
-}
-.msg.user{justify-content:flex-end}
-.msg.user .bubble{
-  background:var(--primary);
-  border-color:var(--primary);
-  color:var(--primaryText);
-}
-.msg.bot{justify-content:flex-start}
-
-.composer{
-  margin-top:12px;
+.details-footer{ margin-top: 12px; }
+.details-actions{
   display:flex;
-  gap:10px;
+  gap: 10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.triage{
+  margin-top: 14px;
+  border: 1px solid rgba(255,202,99,0.25);
+  background: rgba(255,202,99,0.08);
+  border-radius: 16px;
+  padding: 12px;
+}
+.triage-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap: 10px;
+}
+.triage-title{font-weight:950}
+.triage-desc{color:var(--muted);font-size:12px;margin-top:4px}
+.triage-actions{
+  margin-top: 10px;
+  display:flex;
+  gap: 10px;
+  flex-wrap:wrap;
+}
+
+.next-action{
+  margin-top: 14px;
+  border: 1px solid rgba(79,140,255,0.22);
+  background: rgba(79,140,255,0.06);
+  border-radius: 16px;
+  padding: 12px;
+}
+.next-action-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap: 10px;
+}
+.next-action-title{font-weight:950}
+.next-action-desc{color:var(--muted);font-size:12px;margin-top:4px}
+.next-action-actions{
+  margin-top: 10px;
+  display:flex;
+  gap: 8px;
+  flex-wrap:wrap;
+}
+
+.tag-editor{display:flex;flex-direction:column;gap:10px}
+.tag-chip-row{display:flex;gap:8px;flex-wrap:wrap}
+.tag-chip{
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.18);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 850;
+  font-size: 12px;
+  display:inline-flex;
+  gap: 8px;
   align-items:center;
 }
-.hint{margin-top:8px;color:var(--muted);font-size:12px}
+.tag-x{
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 950;
+  padding: 0;
+  line-height: 1;
+}
+.tag-x:hover{color: var(--text)}
 
-.typingrow{margin-top:10px;height:18px}
-.typing{color:var(--muted);font-size:13px}
-.hidden{display:none}
-
-.syslist{margin-top:10px;display:flex;flex-direction:column;gap:10px}
-.sysrow{display:flex;justify-content:space-between;gap:10px}
-.syslabel{color:var(--muted);font-size:13px}
-.sysvalue{font-weight:800;font-size:13px}
-
-.links{margin-top:14px;display:flex;gap:12px;flex-wrap:wrap}
-.links a{
-  color:#2563eb;
+/* =========================
+   Company select
+========================= */
+.company-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.company-card{
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  padding: 14px;
   text-decoration:none;
-  font-weight:700;
-  font-size:13px;
-}
-.links a:hover{text-decoration:underline}
-
-.list{
+  color: var(--text);
   display:flex;
-  flex-direction:column;
-  gap:10px;
+  flex-direction: column;
+  gap: 12px;
 }
-.item{
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:12px;
-  background:#fbfcff;
-}
-.itemTitle{font-weight:900}
-.itemSub{color:var(--muted);font-size:12px;margin-top:4px}
-.itemBody{margin-top:8px;white-space:pre-wrap;font-size:13px;line-height:1.25}
+.company-card:hover{border-color: var(--border2); background: rgba(255,255,255,0.06)}
+.company-name{font-weight:950}
+.company-desc{font-size:12px;color:var(--muted);margin-top:4px}
+.company-card-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.company-path{font-size:12px;color:var(--muted2)}
 
-@media (max-width: 900px){
-  .grid{grid-template-columns:1fr}
-  .chatbox{height:320px}
+/* =========================================================
+   Pricing page
+========================================================= */
+.pricing-wrap{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 14px 28px;
+}
+.pricing-panel{ overflow: visible; }
+.pricing-head{
+  padding: 22px 20px 10px;
+  text-align: left;
+}
+.pricing-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-weight: 950;
+  letter-spacing: .2px;
+  color: rgba(233,238,247,0.92);
+  opacity: .9;
+}
+.pricing-title{
+  margin-top: 10px;
+  font-size: 28px;
+  font-weight: 980;
+  letter-spacing: .2px;
+}
+.pricing-sub{
+  margin-top: 8px;
+  max-width: 760px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.pricing-grid{
+  padding: 14px 16px 18px;
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+/* plan cards */
+.plan-card{
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.18);
+  border-radius: 18px;
+  padding: 16px;
+  display:flex;
+  flex-direction: column;
+  min-height: 420px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+}
+.plan-card:hover{
+  border-color: rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.22);
+}
+.plan-featured{
+  border-color: rgba(79,140,255,0.55);
+  background: rgba(79,140,255,0.10);
+  box-shadow: 0 22px 70px rgba(79,140,255,0.12), 0 18px 60px rgba(0,0,0,0.35);
+  transform: translateY(-4px);
+}
+.plan-top{
+  display:flex;
+  justify-content:space-between;
+  gap: 12px;
+  align-items:flex-start;
+}
+.plan-name{
+  font-weight: 980;
+  font-size: 16px;
+  letter-spacing: .2px;
+}
+.plan-desc{
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.35;
+  max-width: 320px;
+}
+.plan-badge{
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: rgba(233,238,247,0.94);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+.plan-featured .plan-badge{
+  border-color: rgba(79,140,255,0.55);
+  background: rgba(79,140,255,0.18);
+}
+.plan-price{
+  margin-top: 16px;
+  display:flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.plan-price-main{
+  font-size: 34px;
+  font-weight: 990;
+  letter-spacing: .2px;
+}
+.plan-price-sub{
+  color: var(--muted);
+  font-weight: 850;
+}
+.plan-divider{
+  margin: 14px 0 12px;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+.plan-features{
+  margin: 0;
+  padding-left: 18px;
+  display:flex;
+  flex-direction: column;
+  gap: 9px;
+  color: rgba(233,238,247,0.92);
+  font-size: 13px;
+  line-height: 1.25;
+}
+.plan-features li{ color: rgba(233,238,247,0.92); }
+.plan-cta{
+  margin-top: auto;
+  padding-top: 16px;
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.plan-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap: 8px;
+  text-decoration:none;
+  font-weight: 950;
+  border-radius: 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(79,140,255,0.55);
+  background: rgba(79,140,255,0.18);
+  color: var(--text);
+}
+.plan-btn:hover{
+  border-color: rgba(79,140,255,0.80);
+  background: rgba(79,140,255,0.26);
+}
+.plan-featured .plan-btn{
+  border-color: rgba(79,140,255,0.80);
+  background: rgba(79,140,255,0.26);
+}
+.plan-footnote{
+  font-size: 12px;
+  color: var(--muted2);
+}
+
+/* FAQ */
+.pricing-faq{
+  margin: 6px 16px 18px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 14px;
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pricing-faq-row{
+  display:grid;
+  grid-template-columns: 220px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.pricing-faq-q{
+  font-weight: 950;
+  color: rgba(233,238,247,0.94);
+}
+.pricing-faq-a{
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+/* =========================================================
+   Timeline detail (for add_timeline detail)
+========================================================= */
+.timeline .event-detail,
+#timeline .event-detail{
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.35;
+  opacity: 0.75;
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 980px){
+  .page-chat .shell{grid-template-columns: 1fr;}
+  .dispatcher-layout{grid-template-columns: 1fr;}
+  .metrics{grid-template-columns: repeat(2,1fr);}
+  .chat-fill,.ticket-fill{min-height:auto;}
+  .company-grid{grid-template-columns: 1fr;}
+  .pricing-grid{ grid-template-columns: 1fr; }
+  .plan-featured{ transform:none; }
+  .pricing-faq-row{ grid-template-columns: 1fr; }
+}
+@media (max-width: 560px){
+  .page-chat .bubble{max-width: 92%;}
+  .page-chat .kv .row{grid-template-columns: 92px 1fr;}
+  .details-grid{grid-template-columns: 1fr;}
+  .details-item-wide{grid-column: span 1;}
+}
+
+/* =========================================================
+   TURBO PATCH: prevent last message hidden under composer
+========================================================= */
+.page-chat .chat-scroll,
+.page-chat .chat{
+  padding-bottom: 96px !important;
+}
+
+/* =========================================================
+   FINAL CHAT FULL-HEIGHT PATCH (no dead space)
+========================================================= */
+body.page-chat{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* prevent whole-page scroll */
+}
+body.page-chat .topbar{ flex: 0 0 auto; }
+body.page-chat .shell-fill{ flex: 1 1 auto; min-height: 0; }
+
+body.page-chat .chat-panel,
+body.page-chat .ticket-panel{
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+body.page-chat .chat-wrap{
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+body.page-chat .chat-scroll{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+body.page-chat .chat-input{
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+.pill-new{
+  background: rgba(79,140,255,.16);
+  border-color: rgba(79,140,255,.35);
+}
+
+/* =========================
+   Chat UI Cards (safety/urgent blocks)
+========================= */
+.ui-card{
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.045);
+  border-radius: 16px;
+  padding: 12px 12px 10px;
+  margin: 8px 0 10px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.45);
+}
+
+.ui-card .ui-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 8px;
+  opacity: .95;
+}
+
+.ui-card .ui-icon{ font-size: 14px; }
+
+.ui-card .ui-body{
+  font-size: 13px;
+  line-height: 1.35;
+  opacity: .95;
+}
+.ui-card .ui-body > div{ margin: 2px 0; }
+
+.ui-card .ui-list{
+  margin: 8px 0 0 18px;
+  padding: 0;
+}
+.ui-card .ui-list li{
+  margin: 4px 0;
+}
+
+/* tones */
+.ui-card.danger{
+  border-color: rgba(255,91,91,.45);
+  background: rgba(255,91,91,.10);
+}
+.ui-card.urgent{
+  border-color: rgba(79,140,255,.45);
+  background: rgba(79,140,255,.12);
+}
+.ui-card.warning{
+  border-color: rgba(255,202,99,.40);
+  background: rgba(255,202,99,.10);
+}
+.ui-card.primary{
+  border-color: rgba(79,140,255,.45);
+  background: rgba(79,140,255,.10);
+}
+
+/* bot continuation bubbles: hide repeated avatar but keep alignment */
+.msg.bot.cont .avatar{
+  visibility: hidden;
+}
+
+/* compact “receipt” bubble spacing */
+.msg.bot.compact .bubble-text{
+  line-height: 1.35;
+}
+.msg.bot.compact .bubble-text br + br{
+  display:none;
+}
+
+/* Bot bubble severity styling */
+.msg.bot .bubble.warning{
+  border: 1px solid rgba(255,202,99,.35);
+  background: rgba(255,202,99,.08);
+}
+.msg.bot .bubble.urgent{
+  border: 1px solid rgba(79,140,255,.40);
+  background: rgba(79,140,255,.10);
+}
+.msg.bot .bubble.danger{
+  border: 1px solid rgba(255,91,91,.45);
+  background: rgba(255,91,91,.10);
+}
+
+/* Badge styling (top chip) */
+.bubble-badge.warning{ background: rgba(255,202,99,.14); border: 1px solid rgba(255,202,99,.35); }
+.bubble-badge.urgent{  background: rgba(79,140,255,.14); border: 1px solid rgba(79,140,255,.35); }
+.bubble-badge.danger{  background: rgba(255,91,91,.14); border: 1px solid rgba(255,91,91,.35); }
+
+/* ALERT BUBBLES — keep at END of style.css if chat.css isn't loaded */
+.page-chat .msg[data-alert="urgent"] .bubble,
+.page-chat .bubble[data-alert="urgent"]{
+  background: rgba(255, 91, 91, 0.14) !important;
+  border: 1px solid rgba(255, 91, 91, 0.55) !important;
+  border-left: 4px solid rgba(255, 91, 91, 0.95) !important;
+}
+
+.page-chat .msg[data-alert="safety"] .bubble,
+.page-chat .bubble[data-alert="safety"]{
+  background: rgba(79, 140, 255, 0.14) !important;
+  border: 1px solid rgba(79, 140, 255, 0.55) !important;
+  border-left: 4px solid rgba(79, 140, 255, 0.95) !important;
+}
+
+/* === Alert bubble colors (bot) === */
+.page-chat .msg.bot .bubble.urgent{
+  background: rgba(255, 91, 91, 0.14) !important;
+  border: 1px solid rgba(255, 91, 91, 0.55) !important;
+  border-left: 4px solid rgba(255, 91, 91, 0.95) !important;
+}
+
+.page-chat .msg.bot .bubble.safety{
+  background: rgba(79, 140, 255, 0.14) !important;
+  border: 1px solid rgba(79, 140, 255, 0.55) !important;
+  border-left: 4px solid rgba(79, 140, 255, 0.95) !important;
+}
+
+/* Optional: if you use warning/danger already */
+.page-chat .msg.bot .bubble.warning{
+  background: rgba(255, 202, 99, 0.14) !important;
+  border: 1px solid rgba(255, 202, 99, 0.55) !important;
+  border-left: 4px solid rgba(255, 202, 99, 0.95) !important;
+}
+
+.page-chat .msg.bot .bubble.danger{
+  background: rgba(255, 91, 91, 0.14) !important;
+  border: 1px solid rgba(255, 91, 91, 0.55) !important;
+  border-left: 4px solid rgba(255, 91, 91, 0.95) !important;
+}
+
+/* =========================================================
+   ✅ FINAL OVERRIDE — THIS IS THE ONLY REAL FIX NEEDED HERE
+   Your file previously had:
+     urgent = BLUE (wrong for your meaning)
+     danger = RED
+   We keep danger as-is and force:
+     urgent = RED
+     safety = BLUE
+   (keep at VERY END of style.css)
+========================================================= */
+
+/* URGENT (RED) — force everywhere */
+.page-chat .bubble.urgent,
+.page-chat .msg.bot .bubble.urgent{
+  border-color: rgba(255,91,91,0.62) !important;
+  background: rgba(255,91,91,0.11) !important;
+  box-shadow: 0 0 0 1px rgba(255,91,91,0.08), 0 18px 50px rgba(0,0,0,0.35) !important;
+}
+.page-chat .bubble-badge.urgent{
+  border-color: rgba(255,91,91,0.65) !important;
+  background: rgba(255,91,91,0.14) !important;
+}
+
+/* SAFETY (BLUE) — new class used by chat.js fix */
+.page-chat .bubble.safety,
+.page-chat .msg.bot .bubble.safety{
+  border-color: rgba(79,140,255,0.62) !important;
+  background: rgba(79,140,255,0.10) !important;
+  box-shadow: 0 0 0 1px rgba(79,140,255,0.10), 0 18px 50px rgba(0,0,0,0.35) !important;
+}
+.page-chat .bubble-badge.safety{
+  border-color: rgba(79,140,255,0.60) !important;
+  background: rgba(79,140,255,0.18) !important;
+}
+
+/* Optional: make “Safety warning” UI cards blue if you ever use ui-card.safety */
+.page-chat .ui-card.safety{
+  border-color: rgba(79,140,255,.45) !important;
+  background: rgba(79,140,255,.10) !important;
 }

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Config — Turbo Dispatch</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">TD</div>
+      <div>
+        <div class="title">Config</div>
+        <div class="subtitle">Plan • service area • tech routing</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a class="btn ghost" href="/dispatcher">Back</a>
+      <a class="btn ghost" href="/pricing">Pricing</a>
+
+      <form method="POST" action="/admin/logout" style="margin:0">
+        <button class="btn ghost" type="submit">Logout</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="shell" style="grid-template-columns:1fr;">
+    <section class="panel" style="max-width:900px;margin:0 auto;">
+      <div class="panel-head">
+        <div class="panel-title">Workspace Settings</div>
+        <div class="pill subtle">Plan: {{ plan_tier }}</div>
+      </div>
+
+      <div style="padding:18px;">
+        <div class="muted" style="margin-bottom:10px;">
+          Owner-only: saving config requires an <span class="mono">owner</span> login.
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="panel-title" style="font-size:16px;margin-bottom:10px;">Plan Tier</div>
+        <select id="planTier" class="select-dark" style="min-width:260px;">
+          <option value="free" {% if cfg.plan_tier=='free' %}selected{% endif %}>free</option>
+          <option value="pro" {% if cfg.plan_tier=='pro' %}selected{% endif %}>pro</option>
+          <option value="enterprise" {% if cfg.plan_tier=='enterprise' %}selected{% endif %}>enterprise</option>
+        </select>
+
+        <div class="divider"></div>
+
+        <div class="panel-title" style="font-size:16px;margin-bottom:10px;">Service Area</div>
+        <div class="muted" style="margin-bottom:8px;">States allowlist (lowercase, comma separated)</div>
+        <input id="states" class="input-dark" value="{{ (cfg.service_states_allowlist or [])|join(',') }}" />
+
+        <div class="muted" style="margin:10px 0 8px;">ZIP3 allowlist (first 3 digits, comma separated)</div>
+        <input id="zip3" class="input-dark" value="{{ (cfg.service_zip3_allowlist or [])|join(',') }}" />
+
+        <div class="divider"></div>
+
+        <div class="panel-title" style="font-size:16px;margin-bottom:10px;">Techs</div>
+        <div class="muted" style="margin-bottom:8px;">Format: one per line → <span class="mono">id,name</span></div>
+        <textarea id="techs" class="textarea-dark" style="min-height:180px;">{% for t in (cfg.techs or []) %}{{t.id}},{{t.name}}
+{% endfor %}</textarea>
+
+        <div style="display:flex;gap:10px;align-items:center;margin-top:14px;">
+          <button class="btn primary" id="saveBtn" type="button">Save Config</button>
+          <div class="muted" id="saveMsg"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const saveBtn = document.getElementById("saveBtn");
+    const saveMsg = document.getElementById("saveMsg");
+
+    function parseList(v){
+      return (v||"").split(",").map(s=>s.trim()).filter(Boolean);
+    }
+
+    function parseTechs(lines){
+      const out = [];
+      (lines||"").split("\n").forEach(line=>{
+        const t = line.trim();
+        if(!t) return;
+        const parts = t.split(",");
+        if(parts.length < 2) return;
+        const id = parts[0].trim();
+        const name = parts.slice(1).join(",").trim();
+        if(id && name) out.push({id, name});
+      });
+      return out;
+    }
+
+    saveBtn.onclick = async ()=>{
+      saveMsg.textContent = "Saving...";
+      const payload = {
+        plan_tier: document.getElementById("planTier").value,
+        service_states_allowlist: parseList(document.getElementById("states").value),
+        service_zip3_allowlist: parseList(document.getElementById("zip3").value),
+        techs: parseTechs(document.getElementById("techs").value)
+      };
+
+      const r = await fetch("/api/config", {
+        method:"POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(payload)
+      });
+
+      const j = await r.json().catch(()=>({}));
+      if(!r.ok){
+        saveMsg.textContent = (j.error || "Save failed");
+        return;
+      }
+      saveMsg.textContent = "Saved — refresh the dispatcher to see changes.";
+    };
+  </script>
+</body>
+</html>

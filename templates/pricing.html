@@ -1,0 +1,197 @@
+<!-- templates/pricing.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{{ client.business_name or client.client_id }} — Pricing</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">TD</div>
+      <div>
+        <div class="title">{{ client.business_name or "Turbo Desk" }}</div>
+        <div class="subtitle">Pricing</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a class="btn btn-ghost" href="{{ url_for('client_chat', client_id=client.client_id) }}">← Back to chat</a>
+      <a class="btn btn-primary" href="{{ url_for('admin_login', client_id=client.client_id) }}">Dispatcher</a>
+    </div>
+  </div>
+
+  <div class="pricing-wrap">
+    <div class="panel pricing-panel">
+      <div class="pricing-head">
+        <div class="pricing-kicker">Turbo Desk</div>
+        <div class="pricing-title">Plans that you can actually sell</div>
+        <div class="pricing-sub">
+          Keep it simple: Starter for small shops, Pro for most businesses, Enterprise for multi-location teams.
+        </div>
+
+        {% if cfg %}
+          <div class="pricing-sub" style="margin-top:10px">
+            <span class="pill">Current plan: {{ (cfg.plan_tier or "starter")|upper }}</span>
+            {# billing is stored in cfg["billing"]["status"] by the upgraded app.py #}
+            <span class="pill">Billing: {{ ((cfg.billing.status if cfg.billing and cfg.billing.status else "unpaid"))|upper }}</span>
+          </div>
+        {% endif %}
+
+        {% if request.args.get("billing") == "success" %}
+          <div class="pricing-sub" style="margin-top:10px">
+            ✅ Payment received — your subscription is being activated. You can open the dispatcher now.
+          </div>
+        {% endif %}
+        {% if request.args.get("billing") == "cancel" %}
+          <div class="pricing-sub" style="margin-top:10px">
+            ⚠️ Checkout canceled — no worries. You can try again anytime.
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Starter -->
+        <div class="plan-card">
+          <div class="plan-top">
+            <div>
+              <div class="plan-name">Starter</div>
+              <div class="plan-desc">For single-location service businesses that want chat intake + notifications.</div>
+            </div>
+            <span class="plan-badge">Basics</span>
+          </div>
+
+          <div class="plan-price">
+            <div class="plan-price-main">$299</div>
+            <div class="plan-price-sub">/ month</div>
+          </div>
+
+          <div class="plan-divider"></div>
+
+          <ul class="plan-features">
+            <li>1 location</li>
+            <li>Customer intake chat</li>
+            <li>Email notifications</li>
+            <li>Basic ticket creation</li>
+          </ul>
+
+          <div class="plan-cta">
+            <!-- Stripe Subscribe -->
+            <button class="plan-btn" type="button" onclick="startCheckout('starter')">
+              Subscribe (Starter) →
+            </button>
+
+            <div style="height:8px"></div>
+            <a class="btn btn-ghost" href="{{ url_for('client_chat', client_id=client.client_id) }}">Start intake →</a>
+
+            <div class="plan-footnote">Best for: owner-operators and small teams.</div>
+          </div>
+        </div>
+
+        <!-- Pro (Featured) -->
+        <div class="plan-card plan-featured">
+          <div class="plan-top">
+            <div>
+              <div class="plan-name">Pro</div>
+              <div class="plan-desc">Everything needed to run dispatch daily: status workflow, SLA, assignment.</div>
+            </div>
+            <span class="plan-badge">Most popular</span>
+          </div>
+
+          <div class="plan-price">
+            <div class="plan-price-main">$599</div>
+            <div class="plan-price-sub">/ month</div>
+          </div>
+
+          <div class="plan-divider"></div>
+
+          <ul class="plan-features">
+            <li>Everything in Starter</li>
+            <li>Dispatcher dashboard</li>
+            <li>SLA tracking + breach warnings</li>
+            <li>Tech assignment + internal notes</li>
+            <li>Archive/restore tickets</li>
+          </ul>
+
+          <div class="plan-cta">
+            <!-- Stripe Subscribe -->
+            <button class="plan-btn" type="button" onclick="startCheckout('pro')">
+              Subscribe (Pro) →
+            </button>
+
+            <div style="height:8px"></div>
+            <a class="btn btn-ghost" href="{{ url_for('admin_login', client_id=client.client_id) }}">Open dispatcher →</a>
+
+            <div class="plan-footnote">Best for: teams doing daily scheduling + dispatch.</div>
+          </div>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="plan-card">
+          <div class="plan-top">
+            <div>
+              <div class="plan-name">Enterprise</div>
+              <div class="plan-desc">Multi-location operations with custom workflows and deeper integrations.</div>
+            </div>
+            <span class="plan-badge">Custom</span>
+          </div>
+
+          <div class="plan-price">
+            <div class="plan-price-main">Call</div>
+            <div class="plan-price-sub">for quote</div>
+          </div>
+
+          <div class="plan-divider"></div>
+
+          <ul class="plan-features">
+            <li>Multiple locations</li>
+            <li>Custom intake + routing rules</li>
+            <li>Integrations (CRM, SMS, etc.)</li>
+            <li>Priority support</li>
+          </ul>
+
+          <div class="plan-cta">
+            <a class="plan-btn" href="{{ url_for('client_chat', client_id=client.client_id) }}">Contact →</a>
+            <div class="plan-footnote">Best for: multi-crew / multi-city businesses.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pricing-faq">
+        <div class="pricing-faq-row">
+          <div class="pricing-faq-q">Can I upgrade later?</div>
+          <div class="pricing-faq-a">Yes — most people start on Starter and move to Pro once dispatch becomes daily.</div>
+        </div>
+        <div class="pricing-faq-row">
+          <div class="pricing-faq-q">What industries?</div>
+          <div class="pricing-faq-a">Plumbing, HVAC, electrical, general contractor, restoration — anywhere you need intake + dispatch.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  async function startCheckout(plan){
+    try{
+      const res = await fetch(`/c/{{ client.client_id }}/billing/checkout/${plan}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      });
+
+      const data = await res.json();
+      if(!res.ok || !data.ok){
+        alert(data.error || "Checkout failed.");
+        return;
+      }
+
+      // Redirect user to Stripe Checkout
+      window.location.href = data.checkout_url;
+    }catch(e){
+      alert("Checkout error: " + e);
+    }
+  }
+  </script>
+</body>
+</html>

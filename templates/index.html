@@ -1,85 +1,105 @@
+<!-- templates/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Turbo Desk — Home Service AI</title>
-  <link rel="stylesheet" href="/static/style.css?v={{cache_bust}}">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="color-scheme" content="dark light"/>
+  <title>Turbo Dispatch</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
 </head>
-<body>
-  <div class="wrap">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">T</div>
-        <div class="brandtext">
-          <div class="title">Turbo Desk</div>
-          <div class="subtitle">Home Service AI</div>
+
+<body data-client-id="{{ client.client_id if client else 'default' }}">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">TD</div>
+      <div>
+        <div class="title">{{ client.business_name if client else 'Turbo Dispatch' }}</div>
+        <div class="subtitle">AI Service Dispatcher</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <a class="btn ghost" href="{{ url_for('pricing', client_id=(client.client_id if client else 'default')) }}">Pricing</a>
+
+      <a class="btn ghost"
+         href="{{ url_for('admin_login', client_id=(client.client_id if client else 'default')) }}?next={{ url_for('dispatcher', client_id=(client.client_id if client else 'default')) | urlencode }}">
+        Dispatcher
+      </a>
+
+      <button class="btn ghost" id="newChatBtn" type="button">New Chat</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="panel chat-panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Live Chat</div>
+          <div class="panel-subtitle">Customer intake + ticket creation</div>
+        </div>
+        <div class="pill subtle" id="chatState">Ready</div>
+      </div>
+
+      <div class="chat-wrap">
+        <div class="new-msg-pill" id="newMsgPill">New messages ↓</div>
+
+        <div class="chat" id="chat">
+          <div class="chat-inner" id="chatInner">
+            <div class="msg bot">
+              <div class="avatar">TD</div>
+              <div class="bubble">
+                <div class="bubble-title">Hey — I’m Turbo Dispatch.</div>
+                <div class="bubble-text">What’s going on today? (Example: “outlet sparking” or “toilet overflowing”)</div>
+                <div class="msg-time">—</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="clientbar">
-        <input id="clientIdInput" class="input" type="text" placeholder="client id (default / abc_plumbing)" />
-        <button id="applyClientBtn" class="btn">Apply</button>
+      <div class="composer">
+        <input
+          id="msgInput"
+          type="text"
+          placeholder="Describe the issue… (ex: outlet sparking, toilet overflowing)"
+          autocomplete="off"
+        />
+        <button id="sendBtn" class="btn primary" type="button">Send</button>
       </div>
-    </header>
+    </section>
 
-    <main class="grid">
-      <section class="card">
-        <div class="cardhead">
-          <div>
-            <div class="cardtitle">Customer Chat</div>
-            <div class="muted">Online</div>
-          </div>
-          <div class="pill">Online</div>
+    <aside class="panel ticket-panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Ticket</div>
+          <div class="panel-subtitle">Live summary for dispatch</div>
         </div>
+        <div class="pill subtle" id="ticketStatusPill">open</div>
+      </div>
 
-        <div id="chatBox" class="chatbox" aria-live="polite"></div>
+      <div class="kv">
+        <div class="row"><div class="k">Session</div><div class="v mono big" id="ticketId">—</div></div>
+        <div class="row"><div class="k">Service</div><div class="v big" id="ticketService">—</div></div>
+        <div class="row"><div class="k">Urgency</div><div class="v big" id="ticketUrgency">—</div></div>
+        <div class="row"><div class="k">Status</div><div class="v big" id="ticketStatus">—</div></div>
+      </div>
 
-        <div class="typingrow">
-          <span id="typingIndicator" class="typing hidden">AI is typing…</span>
-        </div>
+      <div class="divider"></div>
 
-        <div class="composer">
-          <input id="messageInput" class="input grow" type="text" placeholder="Describe the issue… (ex: my outlet is sparking)" />
-          <button id="sendBtn" class="btn primary">Send</button>
-        </div>
+      <div class="kv">
+        <div class="row"><div class="k">Address</div><div class="v mono" id="ticketAddress">—</div></div>
+        <div class="row"><div class="k">Availability</div><div class="v mono" id="ticketAvailability">—</div></div>
+        <div class="row"><div class="k">Phone</div><div class="v mono" id="ticketPhone">—</div></div>
+      </div>
 
-        <div class="hint">Press <b>Enter</b> to send</div>
-      </section>
+      <div class="divider"></div>
 
-      <aside class="card">
-        <div class="cardhead">
-          <div>
-            <div class="cardtitle">System</div>
-            <div class="muted">Status: <b id="sysStatus">Checking…</b></div>
-          </div>
-        </div>
+      <div class="panel-title" style="padding: 0 18px; margin-bottom:10px;">Timeline</div>
+      <div class="timeline" id="timeline"></div>
+    </aside>
+  </main>
 
-        <div class="syslist">
-          <div class="sysrow">
-            <div class="syslabel">Client</div>
-            <div id="sysClient" class="sysvalue">default</div>
-          </div>
-          <div class="sysrow">
-            <div class="syslabel">Email Alerts</div>
-            <div id="emailStatus" class="sysvalue">—</div>
-          </div>
-          <div class="sysrow">
-            <div class="syslabel">Last Priority</div>
-            <div id="priorityStatus" class="sysvalue">—</div>
-          </div>
-        </div>
-
-        <div class="links">
-          <a href="/health" target="_blank" rel="noreferrer">Health</a>
-          <a href="/clients" target="_blank" rel="noreferrer">Clients</a>
-          <a href="/admin" target="_blank" rel="noreferrer">Admin</a>
-          <a href="/onboard" target="_blank" rel="noreferrer">Onboard</a>
-        </div>
-      </aside>
-    </main>
-  </div>
-
-  <script src="/static/script.js?v={{cache_bust}}"></script>
+  <script src="{{ url_for('static', filename='chat.js') }}"></script>
 </body>
 </html>

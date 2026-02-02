@@ -1,0 +1,254 @@
+/* static/chat.css */
+
+:root{
+  --panel-bg: rgba(20, 24, 30, 0.65);
+  --panel-border: rgba(255,255,255,0.08);
+  --text: rgba(255,255,255,0.92);
+  --muted2: rgba(255,255,255,0.45);
+}
+
+/* Page wrapper */
+.page{
+  padding: 18px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* 2-column layout */
+.layout{
+  display: grid;
+  grid-template-columns: minmax(520px, 1fr) 420px;
+  gap: 16px;
+  align-items: start;
+}
+
+/* Panels */
+.panel{
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+/* Panel header */
+.panel-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 14px 14px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.panel-title{
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: .2px;
+}
+
+.panel-sub{
+  font-size: 12px;
+  color: var(--muted2);
+  margin-top: 2px;
+}
+
+.panel-actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+/* Chat panel */
+.chat-panel{
+  min-height: calc(100vh - 110px);
+  display:flex;
+  flex-direction: column;
+}
+
+/* Chat scroll */
+.chat{
+  flex: 1;
+  padding: 14px;
+  overflow: auto;
+}
+
+.chat-inner{
+  display:flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Messages */
+.msg{
+  display:flex;
+  gap: 10px;
+  align-items:flex-end;
+}
+
+.msg .avatar{
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight: 800;
+  font-size: 12px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  flex: 0 0 auto;
+}
+
+.msg .bubble{
+  max-width: 72%;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255,255,255,0.04);
+}
+
+.msg.bot .bubble{ border-top-left-radius: 8px; }
+
+.msg.user{
+  justify-content: flex-end;
+}
+
+/* ✅ show user avatar (JS renders it) and put it on the RIGHT */
+.msg.user .bubble{ order: 1; max-width: 70%; border-color: rgba(80,170,255,0.25); background: rgba(60,140,255,0.12); }
+.msg.user .avatar{ order: 2; margin-left: 8px; }
+
+.bubble-title{
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.bubble-text{
+  font-size: 12.5px;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.msg-time{
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--muted2);
+}
+
+/* Composer */
+.composer{
+  display:flex;
+  gap: 10px;
+  padding: 12px;
+  border-top: 1px solid var(--panel-border);
+  background: rgba(0,0,0,0.10);
+}
+
+.composer .input{
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid var(--panel-border);
+  outline: none;
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+}
+
+/* New message pill */
+.new-msg-pill{
+  position: sticky;
+  bottom: 58px;
+  margin: 0 auto 10px auto;
+  border-radius: 999px;
+  padding: 8px 14px;
+  border: 1px solid rgba(80,170,255,0.35);
+  background: rgba(60,140,255,0.14);
+  color: var(--text);
+}
+
+/* Ticket panel */
+.ticket-panel{
+  position: sticky;
+  top: 86px;
+  max-height: calc(100vh - 110px);
+  overflow: auto;
+}
+
+/* Ticket grid */
+.ticket-grid{
+  padding: 12px 14px;
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ticket-grid .row{
+  display:grid;
+  grid-template-columns: 130px 1fr;
+  gap: 12px;
+  align-items:center;
+}
+
+.ticket-grid .k{ font-size: 12px; color: var(--muted2); }
+.ticket-grid .v{ font-size: 12.5px; color: var(--text); text-align: right; word-break: break-word; }
+
+.divider{
+  height: 1px;
+  background: var(--panel-border);
+  margin: 6px 0;
+}
+
+.timeline-head{ padding: 12px 14px 8px 14px; }
+
+.timeline{
+  padding: 0 14px 14px 14px;
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* =========================================================
+   Typing indicator dots (used by chat.js)
+========================================================= */
+.bubble-text.typing{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+}
+.dots{ display:inline-flex; gap:6px; align-items:center; }
+.dot{
+  width:6px; height:6px; border-radius:999px;
+  background: rgba(233,238,247,0.55);
+  animation: dotPulse 1s infinite ease-in-out;
+}
+.dot:nth-child(2){ animation-delay:.12s; }
+.dot:nth-child(3){ animation-delay:.24s; }
+@keyframes dotPulse{
+  0%,100%{ transform: translateY(0); opacity:.5; }
+  50%{ transform: translateY(-2px); opacity:1; }
+}
+
+/* Responsive fallback */
+@media (max-width: 1080px){
+  .layout{ grid-template-columns: 1fr; }
+  .ticket-panel{ position: static; max-height: none; }
+  .chat-panel{ min-height: auto; }
+}
+
+/* =========================================================
+   ✅ BULLETPROOF OVERRIDE
+   Prevents global CSS from collapsing this layout.
+========================================================= */
+#chatPage.page.page-chat .layout{
+  display: grid !important;
+  grid-template-columns: minmax(520px, 1fr) 420px !important;
+  gap: 16px !important;
+  align-items: start !important;
+}
+@media (max-width: 1080px){
+  #chatPage.page.page-chat .layout{ grid-template-columns: 1fr !important; }
+}

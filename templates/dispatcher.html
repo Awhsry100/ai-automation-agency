@@ -1,0 +1,746 @@
+<!-- templates/dispatcher.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{{ client.business_name or client.client_id }} — Dispatcher</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <script>
+    window.TURBO_CLIENT_ID = "{{ client.client_id }}";
+  </script>
+
+  <style>
+    /* tiny helpers if your style.css doesn't already cover these */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 420px 1fr 420px;
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 1180px) {
+      .grid-3 { grid-template-columns: 1fr; }
+    }
+    .stack { display: grid; gap: 12px; }
+    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .row-between { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+    .pill { padding: 4px 10px; border-radius: 999px; font-size: 12px; border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.04); }
+    .pill-danger { background: rgba(255,0,0,.10); border-color: rgba(255,0,0,.25); }
+    .pill-warn { background: rgba(255,180,0,.10); border-color: rgba(255,180,0,.25); }
+    .muted { opacity: .75; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .btn { cursor:pointer; }
+    .btn[disabled] { opacity:.6; cursor:not-allowed; }
+    .input, select, textarea { width:100%; }
+    .queue-item { cursor:pointer; }
+    .queue-item.active { outline: 2px solid rgba(80,140,255,.35); border-radius: 14px; }
+    .timeline { display:grid; gap:10px; margin-top: 10px; }
+    .event { border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03); border-radius: 14px; padding: 10px; }
+    .event .t { font-size:12px; opacity:.75; margin-top: 6px; }
+
+    /* Map container */
+    #map {
+      height: 360px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+  </style>
+</head>
+
+<body class="page-dispatcher">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">TD</div>
+      <div>
+        <div class="title">{{ client.business_name or client.client_id }}</div>
+        <div class="subtitle">Dispatcher console</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <a class="btn btn-ghost" href="{{ url_for('select_company') }}">← Back</a>
+      <a class="btn btn-ghost" href="{{ url_for('pricing', client_id=client.client_id) }}">Pricing</a>
+      <a class="btn btn-primary" href="{{ url_for('client_chat', client_id=client.client_id) }}">Chat</a>
+      <a class="btn btn-ghost" href="{{ url_for('admin_logout', client_id=client.client_id) }}">Logout</a>
+    </div>
+  </div>
+
+  <main class="shell shell-fill">
+    <section class="panel">
+      <header class="panel-head row-between" style="gap:12px;">
+        <div>
+          <div class="panel-title">Tickets</div>
+          <div class="panel-subtitle" id="stateLine">Loading…</div>
+        </div>
+
+        <div class="row" style="justify-content:flex-end;">
+          <input class="input" id="search" style="width:260px;" placeholder="Search ticket id, address, phone…">
+          <select class="input" id="statusFilter" style="width:160px;">
+            <option value="">All statuses</option>
+            <option value="open">open</option>
+            <option value="scheduled">scheduled</option>
+            <option value="en_route">en_route</option>
+            <option value="onsite">onsite</option>
+            <option value="completed">completed</option>
+            <option value="canceled">canceled</option>
+          </select>
+
+          <label class="row muted" style="font-size:12px;">
+            <input type="checkbox" id="showArchived" style="width:auto;">
+            <span>Show archived</span>
+          </label>
+
+          <button class="btn btn-ghost" id="refreshBtn" type="button">Refresh</button>
+        </div>
+      </header>
+
+      <div class="grid-3" style="padding:14px;">
+
+        <!-- LEFT: Queue -->
+        <div class="stack">
+          <div class="bubble" style="display:block;">
+            <div class="bubble-title">Queue</div>
+            <div class="bubble-text">
+              <div class="muted" style="font-size:12px;margin-bottom:10px;">
+                <span id="queueCount">0 shown</span> / <span id="queueTotal">0 total</span>
+              </div>
+              <div id="queue" style="display:grid;gap:10px; max-height: 70vh; overflow:auto; padding-right:6px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MIDDLE: Ticket details -->
+        <div class="stack">
+          <div class="bubble" style="display:block;">
+            <div class="row-between" style="margin-bottom:10px;">
+              <div>
+                <div class="bubble-title">Ticket</div>
+                <div class="muted" style="font-size:12px;" id="ticketSubtitle">Select a ticket</div>
+              </div>
+              <div class="row">
+                <button class="btn btn-ghost" id="prevBtn" type="button">—</button>
+                <button class="btn btn-ghost" id="nextBtn" type="button">—</button>
+              </div>
+            </div>
+
+            <div class="bubble-text">
+              <div style="display:grid;grid-template-columns: 140px 1fr; gap:8px 12px; align-items:center;">
+                <div class="muted">Ticket ID</div><div id="t_id">—</div>
+                <div class="muted">Service</div><div id="t_service">—</div>
+                <div class="muted">Address</div><div id="t_address">—</div>
+                <div class="muted">Availability</div><div id="t_avail">—</div>
+                <div class="muted">Phone</div><div id="t_phone">—</div>
+                <div class="muted">Assigned</div><div id="t_assigned">—</div>
+                <div class="muted">Age (SLA)</div><div id="t_age">—</div>
+                <!-- ✅ NEW -->
+                <div class="muted">Seen</div><div id="t_seen">—</div>
+              </div>
+
+              <hr style="margin:14px 0;border:0;border-top:1px solid rgba(255,255,255,.10);">
+
+              <div class="muted" style="margin-bottom:8px;">Set status</div>
+              <div class="row" style="gap:8px;">
+                <button class="btn btn-ghost" data-status="open" type="button">open</button>
+                <button class="btn btn-ghost" data-status="scheduled" type="button">scheduled</button>
+                <button class="btn btn-ghost" data-status="en_route" type="button">en_route</button>
+                <button class="btn btn-ghost" data-status="onsite" type="button">onsite</button>
+                <button class="btn btn-ghost" data-status="completed" type="button">completed</button>
+                <button class="btn btn-ghost" data-status="canceled" type="button">canceled</button>
+              </div>
+
+              <hr style="margin:14px 0;border:0;border-top:1px solid rgba(255,255,255,.10);">
+
+              <div class="muted" style="margin-bottom:8px;">Assign tech</div>
+              <div class="row">
+                <select class="input" id="techSelect" style="max-width:360px;">
+                  <option value="">— unassigned —</option>
+                  {% for t in techs %}
+                    <option value="{{ t.id }}">{{ t.name }}</option>
+                  {% endfor %}
+                </select>
+                <button class="btn btn-primary" id="assignBtn" type="button">Assign</button>
+                <button class="btn btn-ghost" id="autoAssignBtn" type="button">Auto-assign</button>
+              </div>
+
+              <hr style="margin:14px 0;border:0;border-top:1px solid rgba(255,255,255,.10);">
+
+              <div class="muted" style="margin-bottom:8px;">Internal notes</div>
+              <textarea class="input" id="notes" rows="4" placeholder="Dispatcher notes…"></textarea>
+
+              <div class="row" style="margin-top:10px;">
+                <button class="btn btn-primary" id="saveNotesBtn" type="button">Save notes</button>
+                <button class="btn btn-ghost" id="archiveBtn" type="button">Archive</button>
+              </div>
+
+              <hr style="margin:14px 0;border:0;border-top:1px solid rgba(255,255,255,.10);">
+
+              <div class="muted" style="margin-bottom:8px;">Timeline</div>
+              <div id="timeline" class="timeline">
+                <div class="muted">No timeline entries.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Integrations + Map -->
+        <div class="stack">
+
+          <div class="bubble" style="display:block;">
+            <div class="bubble-title">Integrations</div>
+            <div class="bubble-text muted" style="font-size:12px;">Google Calendar</div>
+
+            <div style="margin-top:12px;">
+              <div class="bubble-title" style="font-size:14px;">Google Calendar</div>
+
+              <div class="row" style="margin:8px 0 12px;">
+                <span id="gcalConnectedPill" class="pill">…</span>
+                <span class="muted" style="font-size:12px;">calendar: <span id="gcalCalId" class="mono">—</span></span>
+              </div>
+
+              <div class="row" style="gap:8px;margin-bottom:14px;">
+                <button class="btn btn-primary" id="gcalConnectBtn" type="button">Connect</button>
+                <button class="btn btn-ghost" id="gcalDisconnectBtn" type="button">Disconnect</button>
+                <button class="btn btn-ghost" id="gcalPingBtn" type="button">Ping</button>
+              </div>
+
+              <div class="bubble-title" style="font-size:14px;">Schedule selected ticket</div>
+
+              <div style="display:grid;gap:10px;margin-top:8px;">
+                <div>
+                  <div class="muted" style="font-size:12px;margin-bottom:6px;">Start (ISO or “YYYY-MM-DD HH:MM”)</div>
+                  <input class="input" id="schedStart" placeholder="2026-01-31 14:00">
+                </div>
+                <div>
+                  <div class="muted" style="font-size:12px;margin-bottom:6px;">Duration (minutes)</div>
+                  <input class="input" id="schedMins" type="number" min="15" step="5" value="120">
+                </div>
+
+                <div class="row">
+                  <button class="btn btn-primary" id="syncBtn" type="button">Sync to calendar</button>
+                  <button class="btn btn-ghost" id="deleteEventBtn" type="button">Delete event</button>
+                </div>
+              </div>
+
+              <hr style="margin:14px 0;border:0;border-top:1px solid rgba(255,255,255,.10);">
+
+              <div class="bubble-title" style="font-size:14px;">Tip</div>
+              <div class="muted" style="font-size:12px;">
+                If you ever see the customer chat here again, your dispatcher route or dispatcher.html is still pointing to chat.html.
+              </div>
+            </div>
+          </div>
+
+          <!-- MAP PANEL -->
+          <div class="bubble" style="display:block;">
+            <div class="bubble-title">Map</div>
+            <div class="bubble-text">
+              <div id="map"></div>
+              <div class="muted" style="margin-top:10px;font-size:12px;" id="mapNote">Loading map…</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Google Maps loader (only if key exists) -->
+  {% set maps_key = (cfg.google_maps_public_key if cfg and cfg.google_maps_public_key else "") %}
+  {% if maps_key %}
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&callback=initMap">
+  </script>
+  {% else %}
+  <script>
+    // No maps key present, show a helpful note.
+    window.__NO_MAPS_KEY__ = true;
+  </script>
+  {% endif %}
+
+  <script>
+    // =========================================================
+    // State
+    // =========================================================
+    const cid = window.TURBO_CLIENT_ID;
+
+    let TICKETS = [];
+    let ACTIVE = null;
+    let FILTER_STATUS = "";
+    let SHOW_ARCHIVED = false;
+    let SEARCH = "";
+
+    const $ = (id) => document.getElementById(id);
+
+    function esc(s) {
+      return (s ?? "").toString().replace(/[&<>"']/g, (c) => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+      }[c]));
+    }
+
+    async function jget(url) {
+      const r = await fetch(url, { credentials: "same-origin" });
+      const ct = (r.headers.get("content-type") || "").toLowerCase();
+      const data = ct.includes("application/json") ? await r.json() : { error: await r.text() };
+      if (!r.ok) throw new Error(data?.error || `HTTP ${r.status}`);
+      return data;
+    }
+
+    async function jpost(url, body) {
+      const r = await fetch(url, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body || {})
+      });
+      const ct = (r.headers.get("content-type") || "").toLowerCase();
+      const data = ct.includes("application/json") ? await r.json() : { error: await r.text() };
+      if (!r.ok) throw new Error(data?.error || `HTTP ${r.status}`);
+      return data;
+    }
+
+    // =========================================================
+    // Rendering
+    // =========================================================
+    function ticketMatches(t) {
+      if (!t) return false;
+      if (!SHOW_ARCHIVED && t.deleted) return false;
+      if (FILTER_STATUS && (t.status || "") !== FILTER_STATUS) return false;
+
+      if (SEARCH) {
+        const s = SEARCH.toLowerCase();
+        const hay = [
+          t.id, t.address, t.address_raw, t.phone, t.assigned_tech_name, t.service
+        ].join(" ").toLowerCase();
+        if (!hay.includes(s)) return false;
+      }
+      return true;
+    }
+
+    function isUnseen(t) {
+      return !(t && t.seen_at);
+    }
+
+    function badgeHtml(t) {
+      const urg = (t.urgency || "normal").toLowerCase();
+      const st = (t.status || "").toLowerCase();
+
+      const urgCls = urg === "urgent" ? "pill pill-danger" : "pill";
+      const stCls = "pill";
+      const newCls = "pill pill-warn";
+
+      return `
+        <div class="row" style="gap:8px;">
+          ${isUnseen(t) ? `<span class="${newCls}">NEW</span>` : ``}
+          ${urg ? `<span class="${urgCls}">${esc(urg)}</span>` : ``}
+          ${st ? `<span class="${stCls}">${esc(st)}</span>` : ``}
+        </div>
+      `;
+    }
+
+    function renderList() {
+      const q = $("queue");
+      q.innerHTML = "";
+
+      const filtered = TICKETS.filter(ticketMatches);
+      $("queueCount").textContent = `${filtered.length} shown`;
+      $("queueTotal").textContent = `${TICKETS.length} total`;
+
+      if (!filtered.length) {
+        q.innerHTML = `<div class="muted">No tickets found.</div>`;
+        return;
+      }
+
+      for (const t of filtered) {
+        const div = document.createElement("div");
+        div.className = "bubble queue-item" + (ACTIVE && ACTIVE.id === t.id ? " active" : "");
+        div.innerHTML = `
+          <div class="row-between" style="gap:10px;">
+            <div class="mono" style="font-weight:700;">#${esc(t.id)}</div>
+            ${badgeHtml(t)}
+          </div>
+          <div style="margin-top:8px;">
+            <div style="font-weight:650;">
+              ${esc((t.service || "unknown"))} — ${esc(t.assigned_tech_name || "unassigned")}
+            </div>
+            <div class="muted" style="font-size:12px;margin-top:4px;">
+              ${esc(t.address || t.address_raw || "—")}
+            </div>
+            <div class="muted" style="font-size:12px;margin-top:6px;">
+              Age: ${esc((t.sla_calc && t.sla_calc.age_human) ? t.sla_calc.age_human : "—")}
+            </div>
+          </div>
+        `;
+        div.addEventListener("click", async () => {
+          ACTIVE = t;
+
+          // ✅ NEW: mark seen (non-blocking)
+          fetch(`/c/${cid}/api/tickets/${encodeURIComponent(t.id)}/seen`, {
+            method: "POST",
+            credentials: "same-origin"
+          }).catch(()=>{});
+
+          renderList();
+          renderTicket();
+        });
+        q.appendChild(div);
+      }
+    }
+
+    function renderTimeline(t) {
+      const wrap = $("timeline");
+      wrap.innerHTML = "";
+
+      const arr = Array.isArray(t.timeline) ? t.timeline : [];
+      if (!arr.length) {
+        wrap.innerHTML = `<div class="muted">No timeline entries.</div>`;
+        return;
+      }
+
+      for (const e of arr) {
+        const div = document.createElement("div");
+        div.className = "event";
+        div.innerHTML = `
+          <div style="font-weight:650;">${esc(e.label || "")}</div>
+          <div class="t">${esc(e.at || "")}${e.by ? ` • ${esc(e.by)}` : ""}</div>
+        `;
+        wrap.appendChild(div);
+      }
+    }
+
+    function renderTicket() {
+      const t = ACTIVE;
+      if (!t) {
+        $("ticketSubtitle").textContent = "Select a ticket";
+        $("t_id").textContent = "—";
+        $("t_service").textContent = "—";
+        $("t_address").textContent = "—";
+        $("t_avail").textContent = "—";
+        $("t_phone").textContent = "—";
+        $("t_assigned").textContent = "—";
+        $("t_age").textContent = "—";
+        $("t_seen").textContent = "—";
+        $("notes").value = "";
+        $("techSelect").value = "";
+        renderTimeline({ timeline: [] });
+        return;
+      }
+
+      $("ticketSubtitle").textContent = `Selected: #${t.id}`;
+      $("t_id").textContent = t.id || "—";
+      $("t_service").textContent = t.service || "—";
+      $("t_address").textContent = t.address || t.address_raw || "—";
+      $("t_avail").textContent = t.availability || "—";
+      $("t_phone").textContent = t.phone || (t.phone_declined ? "declined" : "—");
+      $("t_assigned").textContent = t.assigned_tech_name || "—";
+      $("t_age").textContent = (t.sla_calc && t.sla_calc.age_human) ? t.sla_calc.age_human : "—";
+
+      // ✅ NEW
+      $("t_seen").textContent = t.seen_at
+        ? `${t.seen_by || "dispatcher"} @ ${t.seen_at}`
+        : "NEW";
+
+      $("notes").value = t.internal_notes || "";
+      $("techSelect").value = t.assigned_tech_id || "";
+
+      renderTimeline(t);
+    }
+
+    // =========================================================
+    // Tickets
+    // =========================================================
+    async function loadTickets() {
+      $("stateLine").textContent = "Loading…";
+      const include_deleted = SHOW_ARCHIVED ? "1" : "0";
+      const data = await jget(`/c/${cid}/api/tickets?include_deleted=${include_deleted}`);
+
+      TICKETS = Array.isArray(data) ? data : [];
+
+      // Keep ACTIVE updated
+      if (ACTIVE) {
+        const again = TICKETS.find(x => x.id === ACTIVE.id);
+        if (again) ACTIVE = again;
+      }
+
+      renderList();
+      renderTicket();
+
+      // refresh map markers after tickets load
+      if (window.google && window.google.maps && MAP) {
+        loadMapTickets();
+      }
+
+      $("stateLine").textContent = "Ready";
+    }
+
+    // =========================================================
+    // Ticket actions
+    // =========================================================
+    async function setStatus(status) {
+      if (!ACTIVE) return;
+      $("stateLine").textContent = "Updating…";
+      const out = await jpost(`/c/${cid}/api/tickets/${ACTIVE.id}/status`, { status });
+      ACTIVE = out.ticket;
+      await loadTickets();
+    }
+
+    async function assignTech(tech_id) {
+      if (!ACTIVE) return;
+      $("stateLine").textContent = "Assigning…";
+      const out = await jpost(`/c/${cid}/api/tickets/${ACTIVE.id}/assign`, { tech_id });
+      ACTIVE = out.ticket;
+      await loadTickets();
+    }
+
+    async function autoAssign(force=false) {
+      if (!ACTIVE) return;
+      $("stateLine").textContent = "Auto-assigning…";
+      const out = await jpost(`/c/${cid}/api/tickets/${ACTIVE.id}/auto_assign`, { force });
+      ACTIVE = out.ticket;
+      await loadTickets();
+    }
+
+    async function saveNotes() {
+      if (!ACTIVE) return;
+      $("stateLine").textContent = "Saving…";
+      const notes = ($("notes").value || "");
+      const out = await jpost(`/c/${cid}/api/tickets/${ACTIVE.id}/meta`, { internal_notes: notes });
+      ACTIVE = out.ticket;
+      await loadTickets();
+    }
+
+    async function archiveTicket() {
+      if (!ACTIVE) return;
+      $("stateLine").textContent = "Archiving…";
+      await jpost(`/c/${cid}/api/tickets/${ACTIVE.id}/delete`, {});
+      ACTIVE = null;
+      await loadTickets();
+    }
+
+    // =========================================================
+    // Google Calendar integration (uses your backend routes)
+    // =========================================================
+    async function gcalStatus() {
+      try {
+        const s = await jget(`/c/${cid}/integrations/google/status`);
+        const pill = $("gcalConnectedPill");
+        const cal = $("gcalCalId");
+        if (s.connected) {
+          pill.textContent = "✅ Connected";
+          pill.className = "pill";
+          cal.textContent = s.calendar_id || "primary";
+        } else {
+          pill.textContent = "❌ Not connected";
+          pill.className = "pill pill-warn";
+          cal.textContent = "—";
+        }
+      } catch (e) {
+        $("gcalConnectedPill").textContent = "⚠️ Status error";
+        $("gcalConnectedPill").className = "pill pill-warn";
+        $("gcalCalId").textContent = "—";
+      }
+    }
+
+    function gcalConnect() {
+      // backend will redirect to google oauth
+      window.location.href = `/c/${cid}/integrations/google/start`;
+    }
+
+    async function gcalDisconnect() {
+      await jpost(`/c/${cid}/integrations/google/disconnect`, {});
+      await gcalStatus();
+    }
+
+    async function gcalPing() {
+      try {
+        const out = await jget(`/c/${cid}/api/calendar/ping`);
+        if (out.connected) $("stateLine").textContent = "Calendar OK";
+        else $("stateLine").textContent = "Calendar not connected";
+        await gcalStatus();
+      } catch (e) {
+        $("stateLine").textContent = "Calendar ping failed";
+      }
+    }
+
+    async function gcalSyncSelected() {
+      if (!ACTIVE) return;
+      const start = ($("schedStart").value || "").trim();
+      const mins = parseInt(($("schedMins").value || "120"), 10) || 120;
+
+      $("stateLine").textContent = "Syncing…";
+      const out = await jpost(`/c/${cid}/api/tickets/${ACTIVE.id}/calendar`, {
+        start,
+        duration_minutes: mins
+      });
+      ACTIVE = out.ticket;
+      await loadTickets();
+      $("stateLine").textContent = "Synced";
+    }
+
+    async function gcalDeleteSelected() {
+      if (!ACTIVE) return;
+      $("stateLine").textContent = "Deleting event…";
+      const r = await fetch(`/c/${cid}/api/tickets/${ACTIVE.id}/calendar`, {
+        method: "DELETE",
+        credentials: "same-origin"
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data?.error || `HTTP ${r.status}`);
+      ACTIVE = data.ticket || ACTIVE;
+      await loadTickets();
+      $("stateLine").textContent = "Event deleted";
+    }
+
+    // =========================================================
+    // Google Maps (restored)
+    // =========================================================
+    let MAP = null;
+    let MARKERS = [];
+
+    function clearMarkers() {
+      for (const m of MARKERS) m.setMap(null);
+      MARKERS = [];
+    }
+
+    function fitToMarkers() {
+      if (!MAP || !MARKERS.length) return;
+      const bounds = new google.maps.LatLngBounds();
+      MARKERS.forEach(m => bounds.extend(m.getPosition()));
+      MAP.fitBounds(bounds);
+    }
+
+    async function loadMapTickets() {
+      try {
+        const res = await jget(`/c/${cid}/api/tickets_map`);
+        const tickets = res.tickets || [];
+
+        if (!tickets.length) {
+          $("mapNote").textContent = "No tickets with coordinates yet (lat/lng missing).";
+          clearMarkers();
+          return;
+        }
+
+        clearMarkers();
+
+        tickets.forEach(t => {
+          const pos = { lat: Number(t.lat), lng: Number(t.lng) };
+          const marker = new google.maps.Marker({
+            position: pos,
+            map: MAP,
+            title: `#${t.id} — ${t.service} (${t.status})`
+          });
+
+          const info = new google.maps.InfoWindow({
+            content: `
+              <div style="font-family:ui-sans-serif,system-ui; font-size:13px; line-height:1.35;">
+                <div style="font-weight:700;">#${esc(t.id)}</div>
+                <div>${esc(t.service || "")} • ${esc(t.status || "")} • ${esc(t.urgency || "")}</div>
+                <div style="opacity:.75;margin-top:4px;">${esc(t.address || "")}</div>
+                <div style="opacity:.75;margin-top:6px;">(double-click to select)</div>
+              </div>
+            `
+          });
+
+          marker.addListener("click", () => info.open({ anchor: marker, map: MAP }));
+
+          marker.addListener("dblclick", () => {
+            const found = TICKETS.find(x => x.id === t.id);
+            if (found) {
+              ACTIVE = found;
+
+              // ✅ mark seen on map select too
+              fetch(`/c/${cid}/api/tickets/${encodeURIComponent(found.id)}/seen`, {
+                method: "POST",
+                credentials: "same-origin"
+              }).catch(()=>{});
+
+              renderList();
+              renderTicket();
+            }
+          });
+
+          MARKERS.push(marker);
+        });
+
+        $("mapNote").textContent = `Showing ${tickets.length} ticket(s) on the map.`;
+        fitToMarkers();
+      } catch (e) {
+        $("mapNote").textContent = "Map tickets failed: " + (e.message || e);
+      }
+    }
+
+    // Called by Google Maps loader callback
+    window.initMap = function initMap() {
+      const note = $("mapNote");
+      if (window.__NO_MAPS_KEY__) {
+        note.textContent = "No Google Maps key set. Add google_maps_public_key in data/<client_id>/config.json";
+        return;
+      }
+
+      try {
+        MAP = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 39.0, lng: -96.0 },
+          zoom: 4
+        });
+        loadMapTickets();
+      } catch (e) {
+        note.textContent = "Map init failed: " + (e.message || e);
+      }
+    };
+
+    // =========================================================
+    // Events
+    // =========================================================
+    function bind() {
+      $("refreshBtn").addEventListener("click", () => loadTickets());
+
+      $("statusFilter").addEventListener("change", (e) => {
+        FILTER_STATUS = e.target.value || "";
+        renderList();
+      });
+
+      $("showArchived").addEventListener("change", (e) => {
+        SHOW_ARCHIVED = !!e.target.checked;
+        loadTickets();
+      });
+
+      $("search").addEventListener("input", (e) => {
+        SEARCH = (e.target.value || "").trim();
+        renderList();
+      });
+
+      // Status buttons
+      document.querySelectorAll("[data-status]").forEach(btn => {
+        btn.addEventListener("click", () => setStatus(btn.getAttribute("data-status")));
+      });
+
+      $("assignBtn").addEventListener("click", () => assignTech($("techSelect").value || ""));
+      $("autoAssignBtn").addEventListener("click", () => autoAssign(false));
+      $("saveNotesBtn").addEventListener("click", () => saveNotes());
+      $("archiveBtn").addEventListener("click", () => archiveTicket());
+
+      // Calendar
+      $("gcalConnectBtn").addEventListener("click", () => gcalConnect());
+      $("gcalDisconnectBtn").addEventListener("click", () => gcalDisconnect());
+      $("gcalPingBtn").addEventListener("click", () => gcalPing());
+      $("syncBtn").addEventListener("click", () => gcalSyncSelected());
+      $("deleteEventBtn").addEventListener("click", () => gcalDeleteSelected());
+    }
+
+    async function init() {
+      bind();
+      await gcalStatus();
+      await loadTickets();
+
+      // If maps key is missing, show note immediately (no callback will ever fire)
+      if (window.__NO_MAPS_KEY__) {
+        $("mapNote").textContent = "No Google Maps key set. Add google_maps_public_key in data/<client_id>/config.json";
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
