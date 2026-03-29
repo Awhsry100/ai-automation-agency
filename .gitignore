@@ -18,6 +18,8 @@ service-account*.json
 # App data (ignore runtime files but KEEP clients.json)
 data/*
 !data/clients.json
+!data/abc_plumbing/
+!data/abc_plumbing/config.json
 
 # =========================
 # Editor / OS noise

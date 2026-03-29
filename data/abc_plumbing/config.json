@@ -1,0 +1,90 @@
+{
+  "plan_tier": "pro",
+  "service_states_allowlist": [],
+  "service_zip3_allowlist": [],
+  "techs": [
+    {
+      "id": "t1",
+      "name": "A. Rivera",
+      "last_assigned_at": "2026-03-29T01:18:01Z",
+      "enabled": true,
+      "status": "available",
+      "skills": [],
+      "last_assigned_ticket_id": "jl3xUzjQxsE",
+      "assigned_count": 2
+    },
+    {
+      "id": "t2",
+      "name": "M. Chen",
+      "enabled": true,
+      "status": "available",
+      "skills": [],
+      "last_assigned_at": "2026-02-23T03:59:44Z",
+      "last_assigned_ticket_id": "FLpF9wk2APg",
+      "assigned_count": 1
+    },
+    {
+      "id": "t3",
+      "name": "J. Patel",
+      "last_assigned_at": "2026-02-01T06:38:33Z",
+      "enabled": true,
+      "status": "available",
+      "skills": [],
+      "last_assigned_ticket_id": "t3d_1CIZnfY",
+      "assigned_count": 1
+    }
+  ],
+  "service_category": "plumbing",
+  "emergency_keywords": [
+    "flood",
+    "overflow",
+    "burst",
+    "sewage",
+    "backup",
+    "water everywhere",
+    "pipe burst",
+    "toilet overflowing",
+    "sparking",
+    "smell burning",
+    "burning",
+    "smoke",
+    "smoking",
+    "arcing",
+    "crackling"
+  ],
+  "google_maps_public_key": "AIzaSyCPP7xd1Npo2tWJQfzZJ_hh0MySCfZI2B4",
+  "timezone": "America/Los_Angeles",
+  "google_calendar_id": "primary",
+  "admin_password": "",
+  "tracking_hide_street": false,
+  "tech_users": "",
+  "billing": {
+    "active": true,
+    "status": "active",
+    "plan": "pro",
+    "provider": "stripe",
+    "customer_id": "cus_Tu3xbt3hcCTd7z",
+    "subscription_id": "",
+    "price_id": "",
+    "current_period_end": "",
+    "updated_at": "2026-02-02T05:37:58Z"
+  },
+  "default_plan_tier": "starter",
+  "notify": {
+    "enabled": true,
+    "channels": {
+      "sms": true,
+      "email": true
+    },
+    "events": {
+      "intake_confirmed": true,
+      "assigned": true,
+      "scheduled": true,
+      "en_route": true,
+      "eta": true,
+      "onsite": true,
+      "completed": true,
+      "canceled": true
+    }
+  }
+}
