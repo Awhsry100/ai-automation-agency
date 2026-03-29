@@ -1,0 +1,1183 @@
+[
+  {
+    "id": "w_7x-EzEY1g",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "scheduled",
+    "address_raw": "707 East Forest CT, Haysville, KS",
+    "address_street": "707 East Forest CT",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, Haysville, KS 67060",
+    "availability": "today, ASAP",
+    "phone": "316-730-6790",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "asked_availability": true,
+    "asked_phone": true,
+    "phone_declined": false,
+    "intake_complete": true,
+    "deleted": false,
+    "deleted_at": "",
+    "deleted_by": "",
+    "created_at": "2026-01-10T23:49:51Z",
+    "timeline": [
+      {
+        "by": "system",
+        "at": "2026-01-10T23:50:14Z",
+        "label": "Ticket scheduled (intake complete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-10T23:50:14Z",
+        "label": "Phone captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-10T23:50:09Z",
+        "label": "Availability captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-10T23:50:04Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-10T23:49:51Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-10T23:49:51Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-10T23:49:51Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-10T23:49:51Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "WLwZXPTqry0",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "open",
+    "address_raw": "707 East Forest CT, Haysville, KS",
+    "address_street": "707 East Forest CT",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, Haysville, KS 67060",
+    "availability": "",
+    "phone": "",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "asked_availability": true,
+    "asked_phone": false,
+    "phone_declined": false,
+    "intake_complete": false,
+    "deleted": false,
+    "deleted_at": "",
+    "deleted_by": "",
+    "created_at": "2026-01-09T03:58:44Z",
+    "timeline": [
+      {
+        "by": "system",
+        "at": "2026-01-09T03:58:55Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:58:44Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:58:44Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:58:44Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:58:44Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "Y6twcZ2wQfw",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "scheduled",
+    "address_raw": "707 East Forest CT, Haysville, KS, 67060",
+    "address_street": "707 East Forest CT",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, Haysville, KS 67060",
+    "availability": "ASAP \u2014 anytime",
+    "phone": "316-730-6790",
+    "assigned_tech_id": "t1",
+    "assigned_tech_name": "A. Rivera",
+    "tags": [],
+    "internal_notes": "",
+    "pending_address": null,
+    "asked_availability": true,
+    "asked_phone": true,
+    "phone_declined": false,
+    "deleted": false,
+    "deleted_at": "",
+    "deleted_by": "",
+    "created_at": "2026-01-09T03:42:07Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-09T06:06:53Z",
+        "label": "Assigned tech: A. Rivera"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:42:52Z",
+        "label": "Ticket scheduled (intake complete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:42:52Z",
+        "label": "Phone captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:42:38Z",
+        "label": "Availability captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:42:35Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:42:07Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:42:07Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:42:07Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-09T03:42:07Z",
+        "label": "Session opened"
+      }
+    ],
+    "intake_complete": true
+  },
+  {
+    "id": "9qrs3SjMgHg",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "scheduled",
+    "address_raw": "707 East Forest ct, haysville, ks",
+    "address_street": "707 East Forest ct",
+    "address_city": "haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest ct, haysville, KS 67060",
+    "availability": "today, asap",
+    "phone": "316-730-6790",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "asked_availability": true,
+    "asked_phone": true,
+    "phone_declined": false,
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:29:33Z",
+    "deleted_by": "Dremine100",
+    "created_at": "2026-01-08T06:28:40Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:29:33Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T06:29:22Z",
+        "label": "Ticket scheduled (intake complete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T06:29:22Z",
+        "label": "Phone captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T06:29:06Z",
+        "label": "Availability captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T06:28:53Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T06:28:40Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T06:28:40Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T06:28:40Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T06:28:40Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "Lll3H0uIx1Y",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "scheduled",
+    "address_raw": "707 East Forest ct, Haysville, KS, 67060",
+    "address_street": "707 East Forest ct",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest ct, Haysville, KS 67060",
+    "availability": "today, asap",
+    "phone": "316-730-6790",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "pending_address": null,
+    "asked_availability": true,
+    "asked_phone": true,
+    "phone_declined": false,
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:22:08Z",
+    "deleted_by": "Dremine100",
+    "created_at": "2026-01-08T02:16:12Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:22:08Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T02:16:36Z",
+        "label": "Ticket scheduled (intake complete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T02:16:36Z",
+        "label": "Phone captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T02:16:33Z",
+        "label": "Availability captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T02:16:29Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T02:16:12Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T02:16:12Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T02:16:12Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T02:16:12Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "Y_P7GVn7HOo",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "scheduled",
+    "address_raw": "707 East Forest CT, Haysville, KS",
+    "address_street": "707 East Forest CT",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, Haysville, KS 67060",
+    "availability": "today",
+    "phone": "316-730-6790",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "asked_availability": true,
+    "asked_phone": true,
+    "phone_declined": false,
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:22:11Z",
+    "deleted_by": "Dremine100",
+    "created_at": "2026-01-08T00:18:12Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:22:11Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T00:18:44Z",
+        "label": "Ticket scheduled (intake complete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T00:18:44Z",
+        "label": "Phone captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T00:18:40Z",
+        "label": "Availability captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T00:18:38Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T00:18:12Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T00:18:12Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T00:18:12Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-08T00:18:12Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "kEwNafV2nLs",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "scheduled",
+    "address_raw": "707 East Forest CT, Haysville, KS, 67060",
+    "address_street": "707 East Forest CT",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, Haysville, KS 67060",
+    "availability": "today, asap",
+    "phone": "316-730-6790",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "pending_address": null,
+    "asked_availability": true,
+    "asked_phone": true,
+    "phone_declined": false,
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:22:13Z",
+    "deleted_by": "Dremine100",
+    "created_at": "2026-01-07T06:59:36Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:22:13Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T07:00:04Z",
+        "label": "Ticket scheduled (intake complete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T07:00:04Z",
+        "label": "Phone captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T07:00:00Z",
+        "label": "Availability captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:59:53Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:59:36Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:59:36Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:59:36Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:59:36Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "BIovzakbERs",
+    "draft": false,
+    "service": "plumbing",
+    "urgency": "urgent",
+    "status": "open",
+    "address_raw": "707 East Forest CT, Haysville, KS, 67060",
+    "address_street": "707 East Forest CT",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, Haysville, KS 67060",
+    "availability": "",
+    "phone": "",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "pending_address": null,
+    "asked_availability": true,
+    "asked_phone": false,
+    "phone_declined": false,
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:22:15Z",
+    "deleted_by": "Dremine100",
+    "created_at": "2026-01-07T06:56:26Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:22:15Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:56:41Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:56:26Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:56:26Z",
+        "label": "Service detected: plumbing"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:56:26Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:56:26Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "aUieErHCe9Q",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "open",
+    "address_raw": "707 East Forest CT, Haysville, KS, 67060",
+    "address_street": "707 East Forest CT",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, Haysville, KS 67060",
+    "availability": "",
+    "phone": "",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "pending_address": null,
+    "asked_availability": true,
+    "asked_phone": false,
+    "phone_declined": false,
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:22:17Z",
+    "deleted_by": "Dremine100",
+    "created_at": "2026-01-07T06:54:13Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:22:17Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:54:45Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:54:13Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:54:13Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:54:13Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:54:13Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "3k2iL1xczcs",
+    "draft": false,
+    "service": "plumbing",
+    "urgency": "urgent",
+    "status": "open",
+    "address_raw": "707 East Forest CT, Haysville, KS, 67060",
+    "address_street": "707 East Forest CT",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, Haysville, KS 67060",
+    "availability": "today",
+    "phone": "",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "pending_address": null,
+    "asked_availability": true,
+    "asked_phone": true,
+    "phone_declined": false,
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:22:19Z",
+    "deleted_by": "Dremine100",
+    "created_at": "2026-01-07T06:52:09Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:22:19Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:52:25Z",
+        "label": "Availability captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:52:20Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:52:09Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:52:09Z",
+        "label": "Service detected: plumbing"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:52:09Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:52:09Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "yPgIEaVSO4I",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "scheduled",
+    "address_raw": "707 East Forest CT, Haysville, KS",
+    "address_street": "707 East Forest CT",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, Haysville, KS 67060",
+    "availability": "today, asap",
+    "phone": "316-730-6790",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "asked_availability": true,
+    "asked_phone": true,
+    "phone_declined": false,
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:22:21Z",
+    "deleted_by": "Dremine100",
+    "created_at": "2026-01-07T06:44:52Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:22:21Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:45:29Z",
+        "label": "Ticket scheduled (intake complete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:45:29Z",
+        "label": "Phone captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:45:25Z",
+        "label": "Availability captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:45:21Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:44:52Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:44:52Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:44:52Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:44:52Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "5y-_896qBl8",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "open",
+    "address_raw": "",
+    "address_street": "",
+    "address_city": "",
+    "address_state": "",
+    "address_zip": "",
+    "address": "",
+    "availability": "",
+    "phone": "",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "pending_address": {
+      "raw": "707 East forest CT",
+      "street": "707 East forest CT",
+      "city": "",
+      "state": "CT",
+      "zip": "",
+      "missing": [
+        "zip"
+      ]
+    },
+    "asked_availability": false,
+    "asked_phone": false,
+    "phone_declined": false,
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:22:33Z",
+    "deleted_by": "Dremine100",
+    "created_at": "2026-01-07T06:37:22Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:22:33Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:37:22Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:37:22Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:37:22Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T06:37:22Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "FSPtnJJQWW4",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "scheduled",
+    "address_raw": "707 East Forest CT, Haysville, KS",
+    "address_street": "707 East Forest CT",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, Haysville, KS 67060",
+    "availability": "today",
+    "phone": "316-730-6790",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:22:36Z",
+    "deleted_by": "Dremine100",
+    "created_at": "2026-01-07T05:26:39Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:22:36Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T05:27:03Z",
+        "label": "Ticket scheduled (intake complete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T05:27:03Z",
+        "label": "Phone captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T05:26:52Z",
+        "label": "Availability captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T05:26:49Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T05:26:39Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T05:26:39Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T05:26:39Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T05:26:39Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "GDXMeq9o0tM",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "scheduled",
+    "address_raw": "707 East Forest CT, Haysville, KS",
+    "address_street": "707 East Forest CT",
+    "address_city": "Haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, Haysville, KS 67060",
+    "availability": "today",
+    "phone": "yes. 316-730-6790",
+    "assigned_tech_id": "",
+    "assigned_tech_name": "",
+    "tags": [],
+    "internal_notes": "",
+    "created_at": "2026-01-07T04:25:41Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:22:39Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:27:34Z",
+        "label": "Ticket scheduled (intake complete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:27:34Z",
+        "label": "Phone captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:27:28Z",
+        "label": "Availability captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:27:22Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:25:41Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:25:41Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:25:41Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:25:41Z",
+        "label": "Session opened"
+      }
+    ],
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:22:39Z",
+    "deleted_by": "Dremine100"
+  },
+  {
+    "id": "ipNfPblGHCo",
+    "draft": false,
+    "service": "electrical",
+    "urgency": "urgent",
+    "status": "open",
+    "address_raw": "707 East Forest CT, haysville, KS, 67060",
+    "address_street": "707 East Forest CT",
+    "address_city": "haysville",
+    "address_state": "KS",
+    "address_zip": "67060",
+    "address": "707 East Forest CT, haysville, KS 67060",
+    "availability": "",
+    "phone": "",
+    "created_at": "2026-01-07T04:01:49Z",
+    "timeline": [
+      {
+        "by": "Dremine100",
+        "at": "2026-01-08T06:22:42Z",
+        "label": "Ticket archived (soft delete)"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:02:26Z",
+        "label": "Full address captured"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:01:49Z",
+        "label": "Auto-assigned: Tech A"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:01:49Z",
+        "label": "Priority set: urgent"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:01:49Z",
+        "label": "Service detected: electrical"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:01:49Z",
+        "label": "Draft promoted to active ticket"
+      },
+      {
+        "by": "system",
+        "at": "2026-01-07T04:01:49Z",
+        "label": "Session opened"
+      }
+    ],
+    "tags": [],
+    "internal_notes": "",
+    "assigned_tech_id": "t1",
+    "assigned_tech_name": "Tech A",
+    "estimate_total": 234,
+    "estimate_breakdown": [
+      {
+        "label": "Service call (base)",
+        "amount": 159
+      },
+      {
+        "label": "Urgency surcharge",
+        "amount": 75
+      },
+      {
+        "label": "Estimated total",
+        "amount": 234
+      }
+    ],
+    "sla": {
+      "created_at": "2026-01-07T04:01:49Z",
+      "scheduled_at": "",
+      "completed_at": ""
+    },
+    "deleted": true,
+    "deleted_at": "2026-01-08T06:22:42Z",
+    "deleted_by": "Dremine100"
+  },
+  {
+    "id": "xmmZBNJ-lkI",
+    "draft": true,
+    "service": "unknown",
+    "urgency": "normal",
+    "status": "open",
+    "address_raw": "",
+    "address_street": "",
+    "address_city": "",
+    "address_state": "",
+    "address_zip": "",
+    "address": "",
+    "availability": "",
+    "phone": "",
+    "created_at": "2026-01-07T00:23:27Z",
+    "timeline": [
+      {
+        "by": "system",
+        "at": "2026-01-07T00:23:27Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "6zbavxV_Z_I",
+    "draft": true,
+    "service": "unknown",
+    "urgency": "normal",
+    "status": "open",
+    "address_raw": "",
+    "address_street": "",
+    "address_city": "",
+    "address_state": "",
+    "address_zip": "",
+    "address": "",
+    "availability": "",
+    "phone": "",
+    "created_at": "2026-01-06T06:53:54Z",
+    "timeline": [
+      {
+        "by": "system",
+        "at": "2026-01-06T06:53:54Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "ALaMIP4WWdY",
+    "draft": true,
+    "service": "unknown",
+    "urgency": "normal",
+    "status": "open",
+    "address_raw": "",
+    "address_street": "",
+    "address_city": "",
+    "address_state": "",
+    "address_zip": "",
+    "address": "",
+    "availability": "",
+    "phone": "",
+    "created_at": "2026-01-06T06:36:40Z",
+    "timeline": [
+      {
+        "by": "system",
+        "at": "2026-01-06T06:36:40Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "KYKHtlwIaFA",
+    "draft": true,
+    "service": "unknown",
+    "urgency": "normal",
+    "status": "open",
+    "address_raw": "",
+    "address_street": "",
+    "address_city": "",
+    "address_state": "",
+    "address_zip": "",
+    "address": "",
+    "availability": "",
+    "phone": "",
+    "created_at": "2026-01-06T06:36:39Z",
+    "timeline": [
+      {
+        "by": "system",
+        "at": "2026-01-06T06:36:39Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "30v8OHwGBdU",
+    "draft": true,
+    "service": "unknown",
+    "urgency": "normal",
+    "status": "open",
+    "address_raw": "",
+    "address_street": "",
+    "address_city": "",
+    "address_state": "",
+    "address_zip": "",
+    "address": "",
+    "availability": "",
+    "phone": "",
+    "created_at": "2026-01-06T06:36:17Z",
+    "timeline": [
+      {
+        "by": "system",
+        "at": "2026-01-06T06:36:17Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "SQ-kXsQB6wo",
+    "draft": true,
+    "service": "unknown",
+    "urgency": "normal",
+    "status": "open",
+    "address": "",
+    "availability": "",
+    "phone": "",
+    "created_at": "2026-01-06T06:03:11Z",
+    "timeline": [
+      {
+        "by": "system",
+        "at": "2026-01-06T06:03:11Z",
+        "label": "Session opened"
+      }
+    ]
+  },
+  {
+    "id": "2gDmJofsbb0",
+    "draft": true,
+    "service": "unknown",
+    "urgency": "normal",
+    "status": "open",
+    "address": "",
+    "availability": "",
+    "phone": "",
+    "created_at": "2026-01-06T05:46:20Z",
+    "timeline": [
+      {
+        "by": "system",
+        "at": "2026-01-06T05:46:20Z",
+        "label": "Session opened"
+      }
+    ]
+  }
+]

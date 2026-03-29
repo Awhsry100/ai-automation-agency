@@ -1,0 +1,19 @@
+{
+  "client_id": "abc_plumbing",
+  "business_name": "ABC Plumbing",
+  "service_category": "plumbing",
+  "emergency_keywords": [
+    "flood",
+    "overflow",
+    "burst",
+    "sewage",
+    "backup",
+    "water everywhere",
+    "pipe burst",
+    "toilet overflowing"
+  ],
+  "techs": [
+    { "id": "p1", "name": "Plumber 1" },
+    { "id": "p2", "name": "Plumber 2" }
+  ]
+}

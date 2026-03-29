@@ -1,0 +1,25 @@
+{
+  "plan_tier": "pro",
+  "service_states_allowlist": [
+    "ks"
+  ],
+  "service_zip3_allowlist": [
+    "670",
+    "671"
+  ],
+  "techs": [
+    {
+      "id": "t1",
+      "name": "A. Rivera"
+    },
+    {
+      "id": "t2",
+      "name": "M. Chen"
+    },
+    {
+      "id": "t3",
+      "name": "J. Patel"
+    }
+  ]
+}
+

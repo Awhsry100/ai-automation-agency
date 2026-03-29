@@ -1,0 +1,14 @@
+{
+  "brand_name": "Turbo Dispatch",
+  "brand_tagline": "AI Service Dispatcher",
+  "logo_text": "TD",
+  "trust_line": "Available 24/7 \u2022 Emergency-safe intake \u2022 Human follow-up guaranteed",
+  "accent_color": "#2f6bff",
+  "business_hours": {
+    "timezone_label": "Local",
+    "start_hour": 8,
+    "end_hour": 18,
+    "weekends_after_hours": true
+  },
+  "demo_mode": false
+}

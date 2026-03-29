@@ -1,11 +1,14 @@
 Flask==3.0.3
 python-dotenv==1.0.1
 gunicorn==21.2.0
+flask-socketio==5.3.6
+eventlet==0.35.2
+redis==5.0.1
 
 # Twilio (SMS)
 twilio==9.2.3
 
-# Stripe (subscriptions = fastest to $1k MRR)
+# Stripe
 stripe==7.11.0
 
 # Google Calendar OAuth + API

@@ -1,5 +1,9 @@
 // static/chat.js
 (() => {
+  // ✅ HARD GUARD: prevents double-init if chat.js is included twice
+  if (window.__TURBO_CHAT_INIT__) return;
+  window.__TURBO_CHAT_INIT__ = true;
+
   const cid = window.TURBO_CLIENT_ID;
 
   const chat = document.getElementById("chat");
@@ -10,12 +14,30 @@
   const newMsgPill = document.getElementById("newMsgPill");
   const chatState = document.getElementById("chatState");
 
+  // ✅ double-submit/click dedupe
+  let __submitJustHandled = false;
+  // ✅ NEW: Enter key can trigger both keydown handler AND form submit
+  let __enterJustHandled = false;
+
   // ✅ catch form-submit reloads
   const chatForm = document.getElementById("chatForm") || (msgInput ? msgInput.closest("form") : null);
   if (chatForm) {
     chatForm.addEventListener("submit", (e) => {
       e.preventDefault();
       e.stopPropagation();
+
+      // ✅ if click handler already triggered send, skip submit send
+      if (__submitJustHandled) {
+        __submitJustHandled = false;
+        return;
+      }
+
+      // ✅ NEW: if Enter key already triggered send, skip submit send
+      if (__enterJustHandled) {
+        __enterJustHandled = false;
+        return;
+      }
+
       sendMessage();
     });
   }
@@ -35,9 +57,7 @@
   const seenMsgIds = new Set();
 
   function setState(s) { if (chatState) chatState.textContent = s; }
-
   function sleep(ms) { return new Promise((resolve) => window.setTimeout(resolve, ms)); }
-
   function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
 
   // ===== Typewriter tuning =====
@@ -228,20 +248,51 @@
   }
 
   // =========================================================
+  // ✅ UI CARD SUPPORT
+  // =========================================================
+  function isUiCard(ui) {
+    if (!ui || typeof ui !== "object") return false;
+    const t = String(ui.type || ui.kind || "").toLowerCase();
+    return t === "card";
+  }
+
+  function cardTone(ui) {
+    const t = String(ui?.tone || ui?.variant || "").toLowerCase().trim();
+    return t || "neutral";
+  }
+
+  function cardTitle(ui) {
+    return String(ui?.title || "").trim();
+  }
+
+  function cardIcon(ui) {
+    return String(ui?.icon || "").trim();
+  }
+
+  function cardBodyText(ui) {
+    const b = (ui && typeof ui.body === "string") ? ui.body : "";
+    if (b && b.trim()) return b;
+    const lines = Array.isArray(ui?.lines) ? ui.lines : [];
+    const joined = lines.map(x => String(x ?? "")).join("\n");
+    return joined.trim() ? joined : "";
+  }
+
+  function cardBullets(ui) {
+    return Array.isArray(ui?.bullets) ? ui.bullets.map(x => String(x ?? "")) : [];
+  }
+
+  // =========================================================
   // ✅ COLOR SWAP MAPPING (CHAT.JS ONLY)
-  // Safety must be RED, Urgent must be BLUE
-  // We achieve this without touching style.css by mapping:
-  //   ui.type "urgent"  -> CSS class "safety" (blue in your CSS)
-  //   ui.type "safety"  -> CSS class "danger" (red in your CSS)
   // =========================================================
   function mapUiTypeToCssClass(type) {
     const t = String(type || "").toLowerCase();
     if (t === "urgent") return "safety";   // urgent => blue
     if (t === "safety") return "danger";   // safety => red
-    return t; // warning/danger/etc unchanged
+    return t;
   }
 
   function buildBadge(ui) {
+    if (isUiCard(ui)) return "";
     if (!ui || !ui.type || !ui.label) return "";
     const icon = ui.icon ? `<span class="icon">${escapeHtml(ui.icon)}</span>` : "";
     const cssType = mapUiTypeToCssClass(ui.type);
@@ -253,9 +304,16 @@
   }
 
   function applyUiTypeToBubble(bubble, ui) {
-    if (!bubble || !ui || !ui.type) return;
+    if (!bubble || !ui) return;
+
+    if (isUiCard(ui)) {
+      const tone = cardTone(ui);
+      if (tone) bubble.classList.add(mapUiTypeToCssClass(tone));
+      return;
+    }
+
+    if (!ui.type) return;
     const cssType = mapUiTypeToCssClass(ui.type);
-    // apply mapped class
     if (cssType) bubble.classList.add(cssType);
   }
 
@@ -269,35 +327,24 @@
     );
   }
 
-  // ✅ stop "Urgency: urgent" from coloring normal summaries
   function inferUiTypeFromText(text) {
     const lo = String(text || "").toLowerCase();
-
-    // Do NOT infer on summaries
     if (lo.includes("urgency:")) return null;
-
-    // If the text says Safety warning -> must be RED (mapped to danger)
-    if (lo.includes("safety warning")) return mapUiTypeToCssClass("safety"); // => danger
-
-    // If it's urgent hazard -> must be BLUE (mapped to safety)
+    if (lo.includes("safety warning")) return mapUiTypeToCssClass("safety");
     if (
       lo.includes("urgent — active hazard") ||
       lo.includes("**urgent") ||
       lo.includes("active hazard")
-    ) return mapUiTypeToCssClass("urgent"); // => safety
-
+    ) return mapUiTypeToCssClass("urgent");
     return null;
   }
 
-  // ✅ Split hazard block (blue urgent) from address question (normal)
   function splitUrgentHazardIntoTwoBubbles(text) {
     const s = String(text || "");
     const lo = s.toLowerCase();
 
-    // Only split hazard blocks
     if (!lo.includes("active hazard")) return null;
 
-    // Robust match: what's/what’s the service address
     const match = lo.match(/what['’]s the service address/);
     if (!match || match.index == null) return null;
 
@@ -307,6 +354,35 @@
 
     if (!top || !rest) return null;
     return { top, rest };
+  }
+
+  function renderCardHeaderHtml(ui) {
+    const icon = cardIcon(ui);
+    const title = cardTitle(ui);
+    if (!icon && !title) return "";
+    const iconHtml = icon ? `${escapeHtml(icon)} ` : "";
+    const safeTitle = title ? escapeHtml(title) : "";
+    return `<div class="bubble-title">${iconHtml}${safeTitle}</div>`;
+  }
+
+  function renderCardBodyHtml(ui) {
+    const body = cardBodyText(ui);
+    const bullets = cardBullets(ui);
+
+    let out = "";
+    if (body && body.trim()) out += textToHtml(body);
+
+    if (bullets && bullets.length) {
+      const list = bullets
+        .filter(b => String(b).trim())
+        .map(b => `• ${String(b).trim()}`)
+        .join("\n");
+      if (list.trim()) {
+        out += (out ? "<br><br>" : "");
+        out += textToHtml(list);
+      }
+    }
+    return out || "";
   }
 
   function addMessage(role, rawText, ui = null, atIso = null, id = null) {
@@ -326,12 +402,22 @@
     const bubble = document.createElement("div");
     bubble.className = "bubble";
 
-    const badgeHtml = (role === "bot") ? buildBadge(ui) : "";
-    if (role === "bot") applyUiTypeToBubble(bubble, ui);
+    const isCard = (role !== "user") && isUiCard(ui);
+
+    const badgeHtml = (role === "bot" && !isCard) ? buildBadge(ui) : "";
+    if (role !== "user") applyUiTypeToBubble(bubble, ui);
+
+    const headerHtml = isCard ? renderCardHeaderHtml(ui) : "";
+    const cardBodyHtml = isCard ? renderCardBodyHtml(ui) : "";
+
+    const contentHtml = isCard
+      ? `<div class="bubble-text">${cardBodyHtml || ""}</div>`
+      : `<div class="bubble-text">${textToHtml(rawText)}</div>`;
 
     bubble.innerHTML = `
       ${badgeHtml}
-      <div class="bubble-text">${textToHtml(rawText)}</div>
+      ${headerHtml}
+      ${contentHtml}
       <div class="msg-time">${escapeHtml(stampFromIso(atIso))}</div>
     `;
 
@@ -353,13 +439,17 @@
     const bubble = document.createElement("div");
     bubble.className = "bubble";
 
-    const badgeHtml = buildBadge(ui);
+    const iso = atIso || new Date().toISOString();
+    const isCard = isUiCard(ui);
+
+    const badgeHtml = isCard ? "" : buildBadge(ui);
     applyUiTypeToBubble(bubble, ui);
 
-    const iso = atIso || new Date().toISOString();
+    const headerHtml = isCard ? renderCardHeaderHtml(ui) : "";
 
     bubble.innerHTML = `
       ${badgeHtml}
+      ${headerHtml}
       <div class="bubble-text"></div>
       <div class="msg-time">${escapeHtml(stampFromIso(iso))}</div>
     `;
@@ -368,7 +458,7 @@
     row.appendChild(bubble);
     chatInner.appendChild(row);
 
-    return { row, bubble, textEl: bubble.querySelector(".bubble-text") };
+    return { row, bubble, textEl: bubble.querySelector(".bubble-text"), isCard };
   }
 
   async function typewriterInto(textEl, fullText) {
@@ -412,7 +502,6 @@
     await sleep(endPauseFor(text));
   }
 
-  // ✅ KEY FIX: do NOT drop UI parts just because text trims empty
   function normalizePartsAndUi(parts, uiParts) {
     const out = [];
     const pArr = Array.isArray(parts) ? parts : [];
@@ -426,7 +515,6 @@
       const text = String(raw ?? "");
       const trimmed = text.trim();
 
-      // Keep if it has text OR it has UI (even if blank)
       if (trimmed.length > 0 || ui) {
         out.push({ text: trimmed.length ? text : "", ui });
       }
@@ -434,7 +522,6 @@
     return out;
   }
 
-  // ✅ bubble-per-part renderer
   async function playBotReplyParts(parts, uiParts) {
     const items = normalizePartsAndUi(parts, uiParts);
     if (!items.length) {
@@ -448,20 +535,37 @@
       const part = items[i].text || "";
       const ui = items[i].ui || null;
 
-      // ✅ Split urgent hazard into 2 bubbles:
-      //    Bubble A = URGENT (must be BLUE -> mapped class "safety")
-      //    Bubble B = normal (address prompt)
+      if (isUiCard(ui) && !String(part || "").trim()) {
+        showTyping();
+        await sleep(160);
+        hideTyping();
+
+        const shell = addBotMessageShell(ui, new Date().toISOString());
+        if (shell && shell.textEl) {
+          shell.textEl.innerHTML = renderCardBodyHtml(ui) || "";
+        }
+
+        const near = isNearBottom(chat);
+        if (near) {
+          if (newMsgPill) newMsgPill.style.display = "none";
+          scrollToBottom();
+        } else {
+          if (newMsgPill) newMsgPill.style.display = "inline-flex";
+        }
+
+        await sleep(120);
+        continue;
+      }
+
       const split = splitUrgentHazardIntoTwoBubbles(part);
       if (split) {
         showTyping();
         await sleep(180);
         hideTyping();
 
-        // Use ui.type "urgent" (mapped to blue "safety" class)
         const shellA = addBotMessageShell({ type: "urgent", label: "URGENT", icon: "🚨" }, new Date().toISOString());
         if (shellA) {
-          // ensure mapped class applied
-          shellA.bubble.classList.add(mapUiTypeToCssClass("urgent")); // => "safety" (blue)
+          shellA.bubble.classList.add(mapUiTypeToCssClass("urgent"));
           await typewriterInto(shellA.textEl, split.top);
         }
 
@@ -471,7 +575,6 @@
         await sleep(140);
         hideTyping();
 
-        // Bubble B normal
         const shellB = addBotMessageShell(null, new Date().toISOString());
         if (shellB) {
           shellB.bubble.classList.remove("urgent", "safety", "danger", "warning");
@@ -496,7 +599,6 @@
       const shell = addBotMessageShell(ui, new Date().toISOString());
       if (!shell) continue;
 
-      // ✅ If ui didn't color it, infer from text
       if (shell?.bubble && !bubbleHasSeverityClass(shell.bubble)) {
         const inferred = inferUiTypeFromText(part);
         if (inferred) shell.bubble.classList.add(inferred);
@@ -551,11 +653,11 @@
     if (sendBtn) sendBtn.disabled = true;
 
     try {
-      const res = await fetch(`/c/${cid}/api/chat`, {
+      const res = await fetch(`/c/${encodeURIComponent(cid)}/api/chat`, {
         method: "POST",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text })
+        body: JSON.stringify({ message: text, client_id: cid })
       });
 
       const ct = (res.headers.get("content-type") || "").toLowerCase();
@@ -565,11 +667,27 @@
 
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
 
-      const parts = Array.isArray(data.reply_parts)
-        ? data.reply_parts
-        : (data.reply ? [data.reply] : []);
+      let parts = [];
+      if (Array.isArray(data.reply_parts)) {
+        parts = data.reply_parts;
+      } else if (typeof data.reply_parts === "string" && data.reply_parts.trim()) {
+        parts = [data.reply_parts];
+      } else if (typeof data.reply === "string" && data.reply.trim()) {
+        parts = [data.reply];
+      } else if (typeof data.message === "string" && data.message.trim()) {
+        parts = [data.message];
+      }
 
-      const uiParts = Array.isArray(data.ui_parts) ? data.ui_parts : [];
+      let uiParts = [];
+      if (Array.isArray(data.ui_parts)) {
+        uiParts = data.ui_parts;
+      } else if (data.ui_parts && typeof data.ui_parts === "object") {
+        uiParts = [data.ui_parts];
+      } else if (Array.isArray(data.ui)) {
+        uiParts = data.ui;
+      } else if (data.ui && typeof data.ui === "object") {
+        uiParts = [data.ui];
+      }
 
       await playBotReplyParts(parts, uiParts);
 
@@ -618,7 +736,7 @@
     toast("ok", "New chat", "Fresh ticket started");
 
     try {
-      const res = await fetch(`/c/${cid}/api/reset`, {
+      const res = await fetch(`/c/${encodeURIComponent(cid)}/api/reset`, {
         method: "POST",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
@@ -641,7 +759,7 @@
 
   async function hydrate() {
     try {
-      const r = await fetch(`/c/${cid}/api/session`, { credentials: "same-origin" });
+      const r = await fetch(`/c/${encodeURIComponent(cid)}/api/session`, { credentials: "same-origin" });
       if (!r.ok) return;
       const data = await r.json();
 
@@ -671,6 +789,10 @@
     sendBtn.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
+
+      // ✅ mark submit as handled (avoids click+submit double-send)
+      __submitJustHandled = true;
+
       sendMessage();
     });
   }
@@ -680,6 +802,10 @@
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         e.stopPropagation();
+
+        // ✅ NEW: stop the form submit path from firing send a 2nd time
+        __enterJustHandled = true;
+
         sendMessage();
       }
     });

@@ -185,7 +185,7 @@
           </div>
         </div>
 
-        <!-- RIGHT: Integrations + Map -->
+        <!-- RIGHT: Integrations + Notifications + Map -->
         <div class="stack">
 
           <div class="bubble" style="display:block;">
@@ -233,6 +233,35 @@
             </div>
           </div>
 
+          <!-- ✅ NOTIFICATIONS PANEL (no inline onclick; prevents double-send) -->
+          <div class="bubble" style="display:block;">
+            <div class="bubble-title">Notify Customer</div>
+            <div class="bubble-text">
+
+              <div class="row" style="gap:8px; align-items:center;">
+                <select class="input" id="notifyEvent" style="max-width:260px;">
+                  <option value="intake_confirmed">Intake Confirmed</option>
+                  <option value="assigned">Tech Assigned</option>
+                  <option value="scheduled">Scheduled</option>
+                  <option value="en_route">En Route</option>
+                  <option value="eta">ETA Update</option>
+                  <option value="onsite">On Site</option>
+                  <option value="completed">Completed</option>
+                  <option value="canceled">Canceled</option>
+                </select>
+
+                <button class="btn btn-primary" id="notifyBtn" type="button">
+                  Send Email/SMS
+                </button>
+              </div>
+
+              <div class="muted" style="margin-top:10px;font-size:12px;" id="notifyStatus">
+                Sends to phone/email on the ticket (if enabled).
+              </div>
+
+            </div>
+          </div>
+
           <!-- MAP PANEL -->
           <div class="bubble" style="display:block;">
             <div class="bubble-title">Map</div>
@@ -251,7 +280,7 @@
   {% set maps_key = (cfg.google_maps_public_key if cfg and cfg.google_maps_public_key else "") %}
   {% if maps_key %}
   <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&callback=initMap&loading=async">
   </script>
   {% else %}
   <script>
@@ -376,7 +405,7 @@
         div.addEventListener("click", async () => {
           ACTIVE = t;
 
-          // ✅ NEW: mark seen (non-blocking)
+          // ✅ mark seen (non-blocking)
           fetch(`/c/${cid}/api/tickets/${encodeURIComponent(t.id)}/seen`, {
             method: "POST",
             credentials: "same-origin"
@@ -384,6 +413,7 @@
 
           renderList();
           renderTicket();
+          renderNotifyHint();
         });
         q.appendChild(div);
       }
@@ -425,6 +455,7 @@
         $("notes").value = "";
         $("techSelect").value = "";
         renderTimeline({ timeline: [] });
+        renderNotifyHint();
         return;
       }
 
@@ -437,7 +468,6 @@
       $("t_assigned").textContent = t.assigned_tech_name || "—";
       $("t_age").textContent = (t.sla_calc && t.sla_calc.age_human) ? t.sla_calc.age_human : "—";
 
-      // ✅ NEW
       $("t_seen").textContent = t.seen_at
         ? `${t.seen_by || "dispatcher"} @ ${t.seen_at}`
         : "NEW";
@@ -446,6 +476,7 @@
       $("techSelect").value = t.assigned_tech_id || "";
 
       renderTimeline(t);
+      renderNotifyHint();
     }
 
     // =========================================================
@@ -456,7 +487,9 @@
       const include_deleted = SHOW_ARCHIVED ? "1" : "0";
       const data = await jget(`/c/${cid}/api/tickets?include_deleted=${include_deleted}`);
 
-      TICKETS = Array.isArray(data) ? data : [];
+      const list = Array.isArray(data) ? data : (Array.isArray(data?.tickets) ? data.tickets : []);
+      TICKETS = list;
+
 
       // Keep ACTIVE updated
       if (ACTIVE) {
@@ -517,6 +550,52 @@
       await jpost(`/c/${cid}/api/tickets/${ACTIVE.id}/delete`, {});
       ACTIVE = null;
       await loadTickets();
+    }
+
+    // =========================================================
+    // Notifications (manual test button)
+    // =========================================================
+    function renderNotifyHint() {
+      const el = $("notifyStatus");
+      if (!el) return;
+      if (!ACTIVE) {
+        el.textContent = "Select a ticket to send a notification.";
+        return;
+      }
+      const hasEmail = !!((ACTIVE.customer_email || ACTIVE.email || "").trim());
+      const hasPhone = !!((ACTIVE.phone || "").trim());
+      if (hasEmail && hasPhone) el.textContent = "Will send to: Email + SMS (if enabled).";
+      else if (hasEmail) el.textContent = "Will send to: Email (if enabled).";
+      else if (hasPhone) el.textContent = "Will send to: SMS (if enabled).";
+      else el.textContent = "No phone/email on this ticket (nothing to send).";
+    }
+
+    async function sendNotify() {
+      const statusEl = $("notifyStatus");
+      if (!ACTIVE) {
+        if (statusEl) statusEl.textContent = "Select a ticket first.";
+        return;
+      }
+
+      const ev = $("notifyEvent").value;
+
+      // button guard to prevent double-click duplicates
+      const btn = $("notifyBtn");
+      if (btn) btn.disabled = true;
+
+      if (statusEl) statusEl.textContent = "Sending…";
+
+      try {
+        const out = await jpost(`/c/${cid}/api/tickets/${ACTIVE.id}/notify_test`, { event: ev });
+
+        // backend may return ok/info
+        const info = (out && (out.info || out.message || "")) || "";
+        if (statusEl) statusEl.textContent = "Sent ✅ " + info;
+      } catch (e) {
+        if (statusEl) statusEl.textContent = "Failed ❌ " + (e.message || e);
+      } finally {
+        if (btn) btn.disabled = false;
+      }
     }
 
     // =========================================================
@@ -594,7 +673,7 @@
     }
 
     // =========================================================
-    // Google Maps (restored)
+    // Google Maps
     // =========================================================
     let MAP = null;
     let MARKERS = [];
@@ -614,7 +693,9 @@
     async function loadMapTickets() {
       try {
         const res = await jget(`/c/${cid}/api/tickets_map`);
-        const tickets = res.tickets || [];
+// accept BOTH: array OR {tickets:[...]}
+const tickets = Array.isArray(res) ? res : (Array.isArray(res?.tickets) ? res.tickets : []);
+
 
         if (!tickets.length) {
           $("mapNote").textContent = "No tickets with coordinates yet (lat/lng missing).";
@@ -650,7 +731,7 @@
             if (found) {
               ACTIVE = found;
 
-              // ✅ mark seen on map select too
+              // mark seen on map select too
               fetch(`/c/${cid}/api/tickets/${encodeURIComponent(found.id)}/seen`, {
                 method: "POST",
                 credentials: "same-origin"
@@ -727,6 +808,11 @@
       $("gcalPingBtn").addEventListener("click", () => gcalPing());
       $("syncBtn").addEventListener("click", () => gcalSyncSelected());
       $("deleteEventBtn").addEventListener("click", () => gcalDeleteSelected());
+
+      // ✅ Notifications (single binding -> prevents double sends)
+      if ($("notifyBtn")) {
+        $("notifyBtn").addEventListener("click", sendNotify);
+      }
     }
 
     async function init() {
@@ -738,9 +824,26 @@
       if (window.__NO_MAPS_KEY__) {
         $("mapNote").textContent = "No Google Maps key set. Add google_maps_public_key in data/<client_id>/config.json";
       }
-    }
 
-    init();
-  </script>
+      renderNotifyHint();
+    }
+    
+ init();
+</script>
+
+<!-- Realtime Socket -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<script>
+const socket = io();
+
+socket.on("connect", () => {
+    console.log("Realtime connected");
+});
+
+socket.on("server_event", (data) => {
+    console.log("Server push:", data);
+});
+</script>
 </body>
 </html>
