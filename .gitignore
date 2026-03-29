@@ -15,9 +15,7 @@ service-account*.json
 *.pem
 *.key
 
-# =========================
 # App data (ignore runtime files but KEEP clients.json)
-# =========================
 data/*
 !data/clients.json
 
@@ -29,6 +27,5 @@ data/*
 Thumbs.db
 "@ | Set-Content -Encoding UTF8 .gitignore
 
-# Ignore runtime data directory
-data/
+
 
