@@ -1,0 +1,11 @@
+2026-01-07T00:23:27Z	admin	127.0.0.1	new_session_created	ticket_id=xmmZBNJ-lkI
+2026-01-07T00:24:05Z	admin	127.0.0.1	tickets_export_csv	count=2
+{"at": "2026-01-07T00:59:33Z", "by": "system", "event": "ticket_created", "meta": {"ticket_id": "MJ7zdQO8Res", "draft": true, "after_hours": false}}
+{"at": "2026-01-07T00:59:33Z", "by": "system", "event": "ticket_activated", "meta": {"ticket_id": "MJ7zdQO8Res"}}
+{"at": "2026-01-07T01:02:44Z", "by": "admin", "event": "admin_login_failed", "meta": {"ip": "127.0.0.1"}}
+{"at": "2026-01-07T01:02:52Z", "by": "admin", "event": "admin_login_failed", "meta": {"ip": "127.0.0.1"}}
+{"at": "2026-01-07T01:03:25Z", "by": "admin", "event": "admin_login_failed", "meta": {"ip": "127.0.0.1"}}
+{"at": "2026-01-07T01:03:32Z", "by": "admin", "event": "admin_login_success", "meta": {"ip": "127.0.0.1"}}
+{"at": "2026-01-07T01:03:46Z", "by": "admin", "event": "ticket_status_updated", "meta": {"ticket_id": "MJ7zdQO8Res", "from": "scheduled", "to": "scheduled"}}
+{"at": "2026-01-07T01:03:49Z", "by": "admin", "event": "ticket_status_updated", "meta": {"ticket_id": "MJ7zdQO8Res", "from": "scheduled", "to": "onsite"}}
+{"at": "2026-01-07T01:03:52Z", "by": "admin", "event": "ticket_status_updated", "meta": {"ticket_id": "2wvPD28U4vI", "from": "scheduled", "to": "onsite"}}

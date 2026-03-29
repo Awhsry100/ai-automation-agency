@@ -16,12 +16,10 @@ service-account*.json
 *.key
 
 # =========================
-# App data (customers, tickets, logs)
+# App data (ignore runtime files but KEEP clients.json)
 # =========================
-data/**/*.json
-data/**/google/token.json
-audit.log
-*.log
+data/*
+!data/clients.json
 
 # =========================
 # Editor / OS noise
